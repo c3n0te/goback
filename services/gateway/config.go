@@ -21,7 +21,7 @@ type Config struct {
 func NewConfig() *Config {
 	grpcAddr := os.Getenv("GRPC_IP")
 	if grpcAddr == "" {
-		grpcAddr = "127.0.0.1"
+		grpcAddr = "txserver"
 	}
 
 	grpcPort := os.Getenv("GRPC_PORT")

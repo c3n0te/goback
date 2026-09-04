@@ -14,11 +14,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-type GatewayServer struct {
-	api.GatewayServer
-	DB *sqlx.DB
-}
-
 func main() {
 	cfg := NewConfig()
 
@@ -27,15 +22,16 @@ func main() {
 		err error
 	)
 
+	slog.Info(fmt.Sprintf("DB URL: %v", cfg.DbUrl))
 	for range 5 {
 		db, err = sqlx.Connect(cfg.DbType, cfg.DbUrl)
 		if err != nil {
 			slog.Error("Failed to connect to DB", "error", err)
-			os.Exit(1)
+			slog.Info("DB Not ready, sleeping for 3 seconds")
+			time.Sleep(3 * time.Second)
+			continue
 		}
-
-		slog.Info("DB not ready, sleeping for 3 seconds")
-		time.Sleep(3 * time.Second)
+		break
 	}
 
 	srv := grpc.NewServer()

@@ -23,6 +23,6 @@ func CallRegister(gbc api.GatewayClient, cfg *Config) (*api.RegResponse, error) 
 		return nil, err
 	}
 
-	slog.Info(fmt.Sprintf("Connected %v", resp.Registered))
+	slog.Info(fmt.Sprintf("Registered %v", resp.Registered))
 	return resp, nil
 }

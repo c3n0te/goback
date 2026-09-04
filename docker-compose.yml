@@ -8,6 +8,8 @@ services:
         - txserver
     ports:
       - 8000:8000
+    restart: on-failure
+
 
   txserver:
     build:
@@ -15,7 +17,7 @@ services:
     depends_on:
       - cockroach
     environment:
-      - DATABASE_URL=postgresql://root@cockroach:26257/defaultdb?sslmode=disable
+      - DB_URL=postgresql://root@cockroach:26257/defaultdb?sslmode=disable
     networks:
       - exchange
     ports:

@@ -27,7 +27,7 @@ func NewConfig() *Config {
 
 	grpcAddr := os.Getenv("GRPC_IP")
 	if grpcAddr == "" {
-		grpcAddr = "127.0.0.1"
+		grpcAddr = "txserver"
 	}
 
 	grpcPort := os.Getenv("GRPC_PORT")
@@ -71,6 +71,7 @@ func NewConfig() *Config {
 	}
 
 	cfg := Config{
+		DbUrl:    dbUrl,
 		GrpcIp:   grpcAddr,
 		GrpcPort: grpcPort,
 		DbType:   db_type,
