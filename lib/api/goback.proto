@@ -1,0 +1,15 @@
+syntax = "proto3";
+option go_package = "./api";
+package api;
+
+service Gateway {
+    rpc Register(RegRequest) returns (RegResponse) {};
+}
+
+message RegRequest {
+    string DeviceId = 1;
+}
+
+message RegResponse {
+    bool Registered = 1;
+}

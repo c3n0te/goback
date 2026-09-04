@@ -1,0 +1,47 @@
+services:
+  gateway:
+    build:
+      dockerfile: ./services/gateway/Containerfile
+    networks:
+      - exchange
+    depends_on:
+        - txserver
+    ports:
+      - 8000:8000
+
+  txserver:
+    build:
+      dockerfile: ./services/txserver/Containerfile
+    depends_on:
+      - cockroach
+    environment:
+      - DATABASE_URL=postgresql://root@cockroach:26257/defaultdb?sslmode=disable
+    networks:
+      - exchange
+    ports:
+      - 50051:50051
+
+  cockroach:
+    image: cockroachdb/cockroach:latest
+    ports:
+      - 26257:26257
+      - 8080:8080
+    command: start-single-node --insecure
+    environment:
+      - COCKROACH_DATABASE=${COCKROACH_DATABASE:-defaultdb}
+    networks:
+      - exchange
+
+  rmq:
+    image: rabbitmq:latest
+    ports:
+      - 5672:5672
+      - 15692:15692
+
+    networks:
+      - exchange
+
+
+networks:
+  exchange:
+    driver: bridge

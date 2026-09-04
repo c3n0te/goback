@@ -1,2 +1,2 @@
-docker build -f Containerfile --rm -t goback:v0.1 .
-docker run -d --rm --name goback goback:v0.1
+docker build -f ./services/gateway/Containerfile --rm -t gateway:v0.1 .
+docker run -d --rm --name gateway gateway:v0.1
