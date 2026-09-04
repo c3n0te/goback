@@ -20,17 +20,10 @@ func NewRouter() *http.ServeMux {
 	return mux
 }
 
-func runHttp(mux *http.ServeMux, addr string) {
-	slog.Info(fmt.Sprintf("HTTP server running on %v", addr))
-	if err := http.ListenAndServe(addr, mux); err != nil {
-		slog.Error(fmt.Sprintf("Failed to listen on %v", addr))
-		panic(err)
-	}
-}
-
 func main() {
 	cfg := NewConfig()
 	mux := NewRouter()
+	slog.Info("Sleeping to give gRPC server time to boot up")
 	time.Sleep(5 * time.Second)
 	conn, err := grpc.NewClient(
 		fmt.Sprintf("%v:%v", cfg.GrpcIp, cfg.GrpcPort),

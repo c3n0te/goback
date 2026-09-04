@@ -17,10 +17,8 @@ import (
 func main() {
 	cfg := NewConfig()
 
-	var (
-		db  *sqlx.DB
-		err error
-	)
+	var db *sqlx.DB
+	var err error
 
 	slog.Info(fmt.Sprintf("DB URL: %v", cfg.DbUrl))
 	for range 5 {
@@ -33,6 +31,7 @@ func main() {
 		}
 		break
 	}
+	defer db.Close()
 
 	srv := grpc.NewServer()
 	gateway := GatewayServer{
