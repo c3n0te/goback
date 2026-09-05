@@ -8,15 +8,27 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type GatewayServer struct {
-	api.GatewayServer
+type GoBackServer struct {
+	api.GoBackServer
 	DB *sqlx.DB
 }
 
-func (srv *GatewayServer) Register(ctx context.Context, req *api.RegRequest) (*api.RegResponse, error) {
-	slog.Info("Registering Device")
-	regres := &api.RegResponse{
-		Registered: false,
+func NewGatewayServer(db *sqlx.DB) GoBackServer {
+	gateway := GoBackServer{
+		DB: db,
 	}
-	return regres, nil
+
+	return gateway
+}
+
+func (srv *GoBackServer) GetAccount(ctx context.Context, req *api.AccountRequest) (*api.AccountResponse, error) {
+	slog.Info("Retrieving Account Information")
+	accres := &api.AccountResponse{}
+	return accres, nil
+}
+
+func (srv *GoBackServer) GetTransactions(ctx context.Context, req *api.TransactionRequest) (*api.TransactionResponse, error) {
+	slog.Info("Retrieving Transaction Log")
+	txres := &api.TransactionResponse{}
+	return txres, nil
 }

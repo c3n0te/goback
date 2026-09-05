@@ -12,17 +12,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func NewRouter() *http.ServeMux {
-	mux := http.NewServeMux()
-	mux.HandleFunc("GET /items", getItems)
-	mux.HandleFunc("GET /items/{id}", getItemById)
-	mux.HandleFunc("POST /items", createItem)
-	return mux
-}
-
 func main() {
 	cfg := NewConfig()
-	mux := NewRouter()
 	slog.Info("Sleeping to give gRPC server time to boot up")
 	time.Sleep(5 * time.Second)
 	conn, err := grpc.NewClient(
@@ -36,8 +27,16 @@ func main() {
 	}
 	defer conn.Close()
 
-	gbc := api.NewGatewayClient(conn)
-	CallRegister(gbc, cfg)
+	gbc := api.NewGoBackClient(conn)
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /account", func(w http.ResponseWriter, r *http.Request) {
+		CallGetAccount(gbc)
+	})
+
+	mux.HandleFunc("GET /transactions", func(w http.ResponseWriter, r *http.Request) {
+		CallGetTransactions(gbc)
+	})
 
 	addr := fmt.Sprintf("%v:%v", cfg.HttpIp, cfg.HttpPort)
 	slog.Info(fmt.Sprintf("HTTP server running on %v", addr))

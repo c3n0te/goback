@@ -3,26 +3,36 @@ package main
 import (
 	"api"
 	"context"
-	"fmt"
 	"log/slog"
 	"time"
 
 	"google.golang.org/grpc/metadata"
 )
 
-func CallRegister(gbc api.GatewayClient, cfg *Config) (*api.RegResponse, error) {
+func CallGetAccount(gbc api.GoBackClient) (*api.AccountResponse, error) {
 	md := metadata.Pairs("timestamp", time.Now().UTC().Format(time.StampNano))
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
-	regreq := &api.RegRequest{
-		DeviceId: "1",
-	}
+	accreq := &api.AccountRequest{}
 
-	resp, err := gbc.Register(ctx, regreq)
+	resp, err := gbc.GetAccount(ctx, accreq)
 	if err != nil {
 		slog.Error("Failed to register gateway gRPC client", "error", err)
 		return nil, err
 	}
 
-	slog.Info(fmt.Sprintf("Registered %v", resp.Registered))
+	return resp, nil
+}
+
+func CallGetTransactions(gbc api.GoBackClient) (*api.TransactionResponse, error) {
+	md := metadata.Pairs("timestamp", time.Now().UTC().Format(time.StampNano))
+	ctx := metadata.NewOutgoingContext(context.Background(), md)
+	txreq := &api.TransactionRequest{}
+
+	resp, err := gbc.GetTransactions(ctx, txreq)
+	if err != nil {
+		slog.Error("Failed to register gateway gRPC client", "error", err)
+		return nil, err
+	}
+
 	return resp, nil
 }

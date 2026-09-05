@@ -2,14 +2,33 @@ syntax = "proto3";
 option go_package = "./api";
 package api;
 
-service Gateway {
-    rpc Register(RegRequest) returns (RegResponse) {};
+service GoBack {
+    rpc GetAccount(AccountRequest) returns (AccountResponse) {};
+    rpc GetQuote(QuoteRequest) returns (QuoteResponse) {};
+    rpc BuyShares(BuyRequest) returns (BuyResponse) {};
+    rpc SellShares(SellRequest) returns (SellResponse) {};
+    rpc AutomatedBuy(AutoBuyRequest) returns (AutoBuyResponse) {};
+    rpc AutomatedSell(AutoSellRequest) returns (AutoSellResponse) {};
+    rpc GetTransactions(TransactionRequest) returns (TransactionResponse) {};
+    rpc CancelTransaction(CancelTxRequest) returns (CancelTxResponse) {};
+    rpc CommitTransaction(CommitTxRequest) returns (CommitTxResponse) {};
 }
 
-message RegRequest {
-    string DeviceId = 1;
-}
-
-message RegResponse {
-    bool Registered = 1;
-}
+message AccountRequest {}
+message AccountResponse {}
+message QuoteRequest {}
+message QuoteResponse {}
+message BuyRequest {}
+message BuyResponse {}
+message SellRequest {}
+message SellResponse {}
+message AutoBuyRequest {}
+message AutoBuyResponse {}
+message AutoSellRequest {}
+message AutoSellResponse {}
+message TransactionRequest {}
+message TransactionResponse {}
+message CancelTxRequest {}
+message CancelTxResponse {}
+message CommitTxRequest {}
+message CommitTxResponse {}

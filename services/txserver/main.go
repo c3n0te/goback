@@ -14,9 +14,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-func main() {
-	cfg := NewConfig()
-
+func NewDbWithRetry(cfg *Config) *sqlx.DB {
 	var db *sqlx.DB
 	var err error
 
@@ -31,28 +29,33 @@ func main() {
 		}
 		break
 	}
+	return db
+}
+
+func main() {
+	cfg := NewConfig()
+
+	db := NewDbWithRetry(cfg)
 	defer db.Close()
+	Migrate(db)
 
 	srv := grpc.NewServer()
-	gateway := GatewayServer{
-		DB: db,
-	}
-
-	api.RegisterGatewayServer(srv, &gateway)
+	goback := NewGatewayServer(db)
+	api.RegisterGoBackServer(srv, &goback)
 	listener, err := net.Listen(
 		"tcp",
 		fmt.Sprintf("%v:%v", cfg.GrpcIp, cfg.GrpcPort),
 	)
 
 	if err != nil {
-		slog.Error("Failed to listen to socket")
+		slog.Error("Failed to listen to socket: ", "error", err)
 		os.Exit(1)
 	}
 
 	slog.Info(fmt.Sprintf("gRPC Server running on %v:%v", cfg.GrpcIp, cfg.GrpcPort))
 	err = srv.Serve(listener)
 	if err != nil {
-		slog.Error("Failed to bind server to listener")
+		slog.Error("Failed to bind server to listener: ", "error", err)
 		os.Exit(1)
 	}
 }

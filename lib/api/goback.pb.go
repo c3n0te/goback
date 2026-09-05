@@ -21,27 +21,26 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type RegRequest struct {
+type AccountRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	DeviceId      string                 `protobuf:"bytes,1,opt,name=DeviceId,proto3" json:"DeviceId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RegRequest) Reset() {
-	*x = RegRequest{}
+func (x *AccountRequest) Reset() {
+	*x = AccountRequest{}
 	mi := &file_lib_api_goback_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RegRequest) String() string {
+func (x *AccountRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RegRequest) ProtoMessage() {}
+func (*AccountRequest) ProtoMessage() {}
 
-func (x *RegRequest) ProtoReflect() protoreflect.Message {
+func (x *AccountRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_lib_api_goback_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -53,39 +52,31 @@ func (x *RegRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RegRequest.ProtoReflect.Descriptor instead.
-func (*RegRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use AccountRequest.ProtoReflect.Descriptor instead.
+func (*AccountRequest) Descriptor() ([]byte, []int) {
 	return file_lib_api_goback_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *RegRequest) GetDeviceId() string {
-	if x != nil {
-		return x.DeviceId
-	}
-	return ""
-}
-
-type RegResponse struct {
+type AccountResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Registered    bool                   `protobuf:"varint,1,opt,name=Registered,proto3" json:"Registered,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RegResponse) Reset() {
-	*x = RegResponse{}
+func (x *AccountResponse) Reset() {
+	*x = AccountResponse{}
 	mi := &file_lib_api_goback_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RegResponse) String() string {
+func (x *AccountResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RegResponse) ProtoMessage() {}
+func (*AccountResponse) ProtoMessage() {}
 
-func (x *RegResponse) ProtoReflect() protoreflect.Message {
+func (x *AccountResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_lib_api_goback_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -97,32 +88,623 @@ func (x *RegResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RegResponse.ProtoReflect.Descriptor instead.
-func (*RegResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use AccountResponse.ProtoReflect.Descriptor instead.
+func (*AccountResponse) Descriptor() ([]byte, []int) {
 	return file_lib_api_goback_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *RegResponse) GetRegistered() bool {
+type QuoteRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *QuoteRequest) Reset() {
+	*x = QuoteRequest{}
+	mi := &file_lib_api_goback_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *QuoteRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*QuoteRequest) ProtoMessage() {}
+
+func (x *QuoteRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[2]
 	if x != nil {
-		return x.Registered
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
 	}
-	return false
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use QuoteRequest.ProtoReflect.Descriptor instead.
+func (*QuoteRequest) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{2}
+}
+
+type QuoteResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *QuoteResponse) Reset() {
+	*x = QuoteResponse{}
+	mi := &file_lib_api_goback_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *QuoteResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*QuoteResponse) ProtoMessage() {}
+
+func (x *QuoteResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use QuoteResponse.ProtoReflect.Descriptor instead.
+func (*QuoteResponse) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{3}
+}
+
+type BuyRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BuyRequest) Reset() {
+	*x = BuyRequest{}
+	mi := &file_lib_api_goback_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BuyRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BuyRequest) ProtoMessage() {}
+
+func (x *BuyRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BuyRequest.ProtoReflect.Descriptor instead.
+func (*BuyRequest) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{4}
+}
+
+type BuyResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BuyResponse) Reset() {
+	*x = BuyResponse{}
+	mi := &file_lib_api_goback_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BuyResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BuyResponse) ProtoMessage() {}
+
+func (x *BuyResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BuyResponse.ProtoReflect.Descriptor instead.
+func (*BuyResponse) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{5}
+}
+
+type SellRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SellRequest) Reset() {
+	*x = SellRequest{}
+	mi := &file_lib_api_goback_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SellRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SellRequest) ProtoMessage() {}
+
+func (x *SellRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SellRequest.ProtoReflect.Descriptor instead.
+func (*SellRequest) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{6}
+}
+
+type SellResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SellResponse) Reset() {
+	*x = SellResponse{}
+	mi := &file_lib_api_goback_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SellResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SellResponse) ProtoMessage() {}
+
+func (x *SellResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SellResponse.ProtoReflect.Descriptor instead.
+func (*SellResponse) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{7}
+}
+
+type AutoBuyRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AutoBuyRequest) Reset() {
+	*x = AutoBuyRequest{}
+	mi := &file_lib_api_goback_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AutoBuyRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AutoBuyRequest) ProtoMessage() {}
+
+func (x *AutoBuyRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AutoBuyRequest.ProtoReflect.Descriptor instead.
+func (*AutoBuyRequest) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{8}
+}
+
+type AutoBuyResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AutoBuyResponse) Reset() {
+	*x = AutoBuyResponse{}
+	mi := &file_lib_api_goback_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AutoBuyResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AutoBuyResponse) ProtoMessage() {}
+
+func (x *AutoBuyResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AutoBuyResponse.ProtoReflect.Descriptor instead.
+func (*AutoBuyResponse) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{9}
+}
+
+type AutoSellRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AutoSellRequest) Reset() {
+	*x = AutoSellRequest{}
+	mi := &file_lib_api_goback_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AutoSellRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AutoSellRequest) ProtoMessage() {}
+
+func (x *AutoSellRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AutoSellRequest.ProtoReflect.Descriptor instead.
+func (*AutoSellRequest) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{10}
+}
+
+type AutoSellResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AutoSellResponse) Reset() {
+	*x = AutoSellResponse{}
+	mi := &file_lib_api_goback_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AutoSellResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AutoSellResponse) ProtoMessage() {}
+
+func (x *AutoSellResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AutoSellResponse.ProtoReflect.Descriptor instead.
+func (*AutoSellResponse) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{11}
+}
+
+type TransactionRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TransactionRequest) Reset() {
+	*x = TransactionRequest{}
+	mi := &file_lib_api_goback_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TransactionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TransactionRequest) ProtoMessage() {}
+
+func (x *TransactionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TransactionRequest.ProtoReflect.Descriptor instead.
+func (*TransactionRequest) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{12}
+}
+
+type TransactionResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TransactionResponse) Reset() {
+	*x = TransactionResponse{}
+	mi := &file_lib_api_goback_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TransactionResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TransactionResponse) ProtoMessage() {}
+
+func (x *TransactionResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TransactionResponse.ProtoReflect.Descriptor instead.
+func (*TransactionResponse) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{13}
+}
+
+type CancelTxRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CancelTxRequest) Reset() {
+	*x = CancelTxRequest{}
+	mi := &file_lib_api_goback_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CancelTxRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CancelTxRequest) ProtoMessage() {}
+
+func (x *CancelTxRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CancelTxRequest.ProtoReflect.Descriptor instead.
+func (*CancelTxRequest) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{14}
+}
+
+type CancelTxResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CancelTxResponse) Reset() {
+	*x = CancelTxResponse{}
+	mi := &file_lib_api_goback_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CancelTxResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CancelTxResponse) ProtoMessage() {}
+
+func (x *CancelTxResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CancelTxResponse.ProtoReflect.Descriptor instead.
+func (*CancelTxResponse) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{15}
+}
+
+type CommitTxRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CommitTxRequest) Reset() {
+	*x = CommitTxRequest{}
+	mi := &file_lib_api_goback_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CommitTxRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CommitTxRequest) ProtoMessage() {}
+
+func (x *CommitTxRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CommitTxRequest.ProtoReflect.Descriptor instead.
+func (*CommitTxRequest) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{16}
+}
+
+type CommitTxResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CommitTxResponse) Reset() {
+	*x = CommitTxResponse{}
+	mi := &file_lib_api_goback_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CommitTxResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CommitTxResponse) ProtoMessage() {}
+
+func (x *CommitTxResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CommitTxResponse.ProtoReflect.Descriptor instead.
+func (*CommitTxResponse) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{17}
 }
 
 var File_lib_api_goback_proto protoreflect.FileDescriptor
 
 const file_lib_api_goback_proto_rawDesc = "" +
 	"\n" +
-	"\x14lib/api/goback.proto\x12\x03api\"(\n" +
+	"\x14lib/api/goback.proto\x12\x03api\"\x10\n" +
+	"\x0eAccountRequest\"\x11\n" +
+	"\x0fAccountResponse\"\x0e\n" +
+	"\fQuoteRequest\"\x0f\n" +
+	"\rQuoteResponse\"\f\n" +
 	"\n" +
-	"RegRequest\x12\x1a\n" +
-	"\bDeviceId\x18\x01 \x01(\tR\bDeviceId\"-\n" +
-	"\vRegResponse\x12\x1e\n" +
+	"BuyRequest\"\r\n" +
+	"\vBuyResponse\"\r\n" +
+	"\vSellRequest\"\x0e\n" +
+	"\fSellResponse\"\x10\n" +
+	"\x0eAutoBuyRequest\"\x11\n" +
+	"\x0fAutoBuyResponse\"\x11\n" +
+	"\x0fAutoSellRequest\"\x12\n" +
+	"\x10AutoSellResponse\"\x14\n" +
+	"\x12TransactionRequest\"\x15\n" +
+	"\x13TransactionResponse\"\x11\n" +
+	"\x0fCancelTxRequest\"\x12\n" +
+	"\x10CancelTxResponse\"\x11\n" +
+	"\x0fCommitTxRequest\"\x12\n" +
+	"\x10CommitTxResponse2\xac\x04\n" +
+	"\x06GoBack\x129\n" +
 	"\n" +
-	"Registered\x18\x01 \x01(\bR\n" +
-	"Registered2:\n" +
-	"\aGateway\x12/\n" +
-	"\bRegister\x12\x0f.api.RegRequest\x1a\x10.api.RegResponse\"\x00B\aZ\x05./apib\x06proto3"
+	"GetAccount\x12\x13.api.AccountRequest\x1a\x14.api.AccountResponse\"\x00\x123\n" +
+	"\bGetQuote\x12\x11.api.QuoteRequest\x1a\x12.api.QuoteResponse\"\x00\x120\n" +
+	"\tBuyShares\x12\x0f.api.BuyRequest\x1a\x10.api.BuyResponse\"\x00\x123\n" +
+	"\n" +
+	"SellShares\x12\x10.api.SellRequest\x1a\x11.api.SellResponse\"\x00\x12;\n" +
+	"\fAutomatedBuy\x12\x13.api.AutoBuyRequest\x1a\x14.api.AutoBuyResponse\"\x00\x12>\n" +
+	"\rAutomatedSell\x12\x14.api.AutoSellRequest\x1a\x15.api.AutoSellResponse\"\x00\x12F\n" +
+	"\x0fGetTransactions\x12\x17.api.TransactionRequest\x1a\x18.api.TransactionResponse\"\x00\x12B\n" +
+	"\x11CancelTransaction\x12\x14.api.CancelTxRequest\x1a\x15.api.CancelTxResponse\"\x00\x12B\n" +
+	"\x11CommitTransaction\x12\x14.api.CommitTxRequest\x1a\x15.api.CommitTxResponse\"\x00B\aZ\x05./apib\x06proto3"
 
 var (
 	file_lib_api_goback_proto_rawDescOnce sync.Once
@@ -136,19 +718,51 @@ func file_lib_api_goback_proto_rawDescGZIP() []byte {
 	return file_lib_api_goback_proto_rawDescData
 }
 
-var file_lib_api_goback_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_lib_api_goback_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_lib_api_goback_proto_goTypes = []any{
-	(*RegRequest)(nil),  // 0: api.RegRequest
-	(*RegResponse)(nil), // 1: api.RegResponse
+	(*AccountRequest)(nil),      // 0: api.AccountRequest
+	(*AccountResponse)(nil),     // 1: api.AccountResponse
+	(*QuoteRequest)(nil),        // 2: api.QuoteRequest
+	(*QuoteResponse)(nil),       // 3: api.QuoteResponse
+	(*BuyRequest)(nil),          // 4: api.BuyRequest
+	(*BuyResponse)(nil),         // 5: api.BuyResponse
+	(*SellRequest)(nil),         // 6: api.SellRequest
+	(*SellResponse)(nil),        // 7: api.SellResponse
+	(*AutoBuyRequest)(nil),      // 8: api.AutoBuyRequest
+	(*AutoBuyResponse)(nil),     // 9: api.AutoBuyResponse
+	(*AutoSellRequest)(nil),     // 10: api.AutoSellRequest
+	(*AutoSellResponse)(nil),    // 11: api.AutoSellResponse
+	(*TransactionRequest)(nil),  // 12: api.TransactionRequest
+	(*TransactionResponse)(nil), // 13: api.TransactionResponse
+	(*CancelTxRequest)(nil),     // 14: api.CancelTxRequest
+	(*CancelTxResponse)(nil),    // 15: api.CancelTxResponse
+	(*CommitTxRequest)(nil),     // 16: api.CommitTxRequest
+	(*CommitTxResponse)(nil),    // 17: api.CommitTxResponse
 }
 var file_lib_api_goback_proto_depIdxs = []int32{
-	0, // 0: api.Gateway.Register:input_type -> api.RegRequest
-	1, // 1: api.Gateway.Register:output_type -> api.RegResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0,  // 0: api.GoBack.GetAccount:input_type -> api.AccountRequest
+	2,  // 1: api.GoBack.GetQuote:input_type -> api.QuoteRequest
+	4,  // 2: api.GoBack.BuyShares:input_type -> api.BuyRequest
+	6,  // 3: api.GoBack.SellShares:input_type -> api.SellRequest
+	8,  // 4: api.GoBack.AutomatedBuy:input_type -> api.AutoBuyRequest
+	10, // 5: api.GoBack.AutomatedSell:input_type -> api.AutoSellRequest
+	12, // 6: api.GoBack.GetTransactions:input_type -> api.TransactionRequest
+	14, // 7: api.GoBack.CancelTransaction:input_type -> api.CancelTxRequest
+	16, // 8: api.GoBack.CommitTransaction:input_type -> api.CommitTxRequest
+	1,  // 9: api.GoBack.GetAccount:output_type -> api.AccountResponse
+	3,  // 10: api.GoBack.GetQuote:output_type -> api.QuoteResponse
+	5,  // 11: api.GoBack.BuyShares:output_type -> api.BuyResponse
+	7,  // 12: api.GoBack.SellShares:output_type -> api.SellResponse
+	9,  // 13: api.GoBack.AutomatedBuy:output_type -> api.AutoBuyResponse
+	11, // 14: api.GoBack.AutomatedSell:output_type -> api.AutoSellResponse
+	13, // 15: api.GoBack.GetTransactions:output_type -> api.TransactionResponse
+	15, // 16: api.GoBack.CancelTransaction:output_type -> api.CancelTxResponse
+	17, // 17: api.GoBack.CommitTransaction:output_type -> api.CommitTxResponse
+	9,  // [9:18] is the sub-list for method output_type
+	0,  // [0:9] is the sub-list for method input_type
+	0,  // [0:0] is the sub-list for extension type_name
+	0,  // [0:0] is the sub-list for extension extendee
+	0,  // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_lib_api_goback_proto_init() }
@@ -162,7 +776,7 @@ func file_lib_api_goback_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lib_api_goback_proto_rawDesc), len(file_lib_api_goback_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
