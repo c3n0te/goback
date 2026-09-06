@@ -6,26 +6,40 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"os"
 	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+func NewGrpcClientWithRetry(cfg *Config) *grpc.ClientConn {
+	var conn *grpc.ClientConn
+	var err error
+
+	for range 5 {
+		conn, err = grpc.NewClient(
+			fmt.Sprintf("%v:%v", cfg.GrpcIp, cfg.GrpcPort),
+			grpc.WithTransportCredentials(insecure.NewCredentials()),
+		)
+
+		if err != nil {
+			slog.Error("Failed to connect to gRPC server", "error", err)
+			slog.Info("DB Not ready, sleeping for 3 seconds")
+			time.Sleep(3 * time.Second)
+			continue
+		}
+
+		slog.Info("gRPC Client ready")
+		break
+	}
+
+	return conn
+}
+
 func main() {
 	cfg := NewConfig()
-	slog.Info("Sleeping to give gRPC server time to boot up")
-	time.Sleep(5 * time.Second)
-	conn, err := grpc.NewClient(
-		fmt.Sprintf("%v:%v", cfg.GrpcIp, cfg.GrpcPort),
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	)
 
-	if err != nil {
-		slog.Error("Failed to create new gRPC client", "error", err)
-		os.Exit(1)
-	}
+	conn := NewGrpcClientWithRetry(cfg)
 	defer conn.Close()
 
 	gbc := api.NewGoBackClient(conn)
