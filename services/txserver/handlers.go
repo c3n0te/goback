@@ -2,8 +2,11 @@ package main
 
 import (
 	"api"
+	"bufio"
 	"context"
+	"fmt"
 	"log/slog"
+	"net"
 	"time"
 	"uuid"
 
@@ -17,13 +20,15 @@ type GoBackServer struct {
 	DB    *sqlx.DB
 	Cache *redis.Client
 	Queue *rmq.AmqpConnection
+	Quote net.Conn
 }
 
-func NewGoBackServer(db *sqlx.DB, cache *redis.Client, queue *rmq.AmqpConnection) GoBackServer {
+func NewGoBackServer(db *sqlx.DB, cache *redis.Client, queue *rmq.AmqpConnection, quoteConn net.Conn) GoBackServer {
 	gateway := GoBackServer{
 		DB:    db,
 		Cache: cache,
 		Queue: queue,
+		Quote: quoteConn,
 	}
 
 	return gateway
@@ -37,6 +42,15 @@ func (srv *GoBackServer) GetAccount(ctx context.Context, req *api.AccountRequest
 
 func (srv *GoBackServer) GetQuote(ctx context.Context, req *api.QuoteRequest) (*api.QuoteResponse, error) {
 	slog.Info("Retrieving Stock Quote")
+	reader := bufio.NewReader(srv.Quote)
+	srv.Quote.Write([]byte("AAPL\n"))
+	resp, err := reader.ReadString('\n')
+	if err != nil {
+		slog.Error("Failed to read Quote Server quote: ", "error", err)
+		return nil, err
+	}
+
+	slog.Info(fmt.Sprintf("Quote Server response: %v", resp))
 	qres := &api.QuoteResponse{}
 	return qres, nil
 }

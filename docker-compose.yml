@@ -11,6 +11,15 @@ services:
     networks:
       - exchange
 
+  quote:
+    build:
+      dockerfile: ./services/quote/Containerfile
+    ports:
+      - 4444:4444
+    restart: on-failure
+    networks:
+      - exchange
+
   txserver:
     build:
       dockerfile: ./services/txserver/Containerfile
@@ -18,6 +27,7 @@ services:
       - cockroach
       - redis
       - rmq
+      - quote
     environment:
       - DB_URL=postgresql://root@cockroach:26257/defaultdb?sslmode=disable
     ports:
@@ -51,7 +61,7 @@ services:
     ports:
       - 6379:6379
     post_start:
-      - command: sh -c "redis-cli CONFIG SET maxmemory 50mb && redis-cli CONFIG SET maxmemory-policy allkeys-lru && redis-cli CONFIG rewrite"
+      - command: sh -c "redis-cli CONFIG SET maxmemory 50mb && redis-cli CONFIG SET maxmemory-policy volatile-ttl"
     networks:
       - exchange
 

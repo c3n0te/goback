@@ -31,7 +31,6 @@ func NewDbWithRetry(cfg *Config) *sqlx.DB {
 			continue
 		}
 
-		slog.Info("DB ready")
 		break
 	}
 
@@ -40,6 +39,7 @@ func NewDbWithRetry(cfg *Config) *sqlx.DB {
 		os.Exit(1)
 	}
 
+	slog.Info("DB ready")
 	return db
 }
 
@@ -75,13 +75,12 @@ func NewQueueWithRetry(cfg *Config) (*rmq.AmqpConnection, *rmq.Environment) {
 	for range 5 {
 		conn, err = env.NewConnection(ctx)
 		if err != nil {
-			slog.Error("Failed to connect to RabbitMQ: %v", "error", err)
+			slog.Error("Failed to connect to RabbitMQ: ", "error", err)
 			slog.Info("Queue Not ready, sleeping for 3 seconds")
 			time.Sleep(3 * time.Second)
 			continue
 		}
 
-		slog.Info("Queue ready")
 		break
 	}
 
@@ -90,7 +89,35 @@ func NewQueueWithRetry(cfg *Config) (*rmq.AmqpConnection, *rmq.Environment) {
 		os.Exit(1)
 	}
 
+	slog.Info("Queue ready")
 	return conn, env
+}
+
+func NewQuoteConnWithRetry(cfg *Config) net.Conn {
+	var quoteConn net.Conn
+	var err error
+
+	tcpAddr := fmt.Sprintf("%v:%v", cfg.QuoteIp, cfg.QuotePort)
+	slog.Info(fmt.Sprintf("Quote Server Address: %v", tcpAddr))
+	for range 5 {
+		quoteConn, err = net.Dial("tcp", tcpAddr)
+		if err != nil {
+			slog.Error("Failed to connect to Quote Server: ", "error", err)
+			slog.Info("Quote Server Not ready, sleeping for 3 seconds")
+			time.Sleep(3 * time.Second)
+			continue
+		}
+
+		break
+	}
+
+	if quoteConn == nil {
+		slog.Error("Failed to connect to Quote Server")
+		os.Exit(1)
+	}
+
+	slog.Info("Quote Server ready")
+	return quoteConn
 }
 
 func main() {
@@ -108,8 +135,11 @@ func main() {
 		_ = env.CloseConnections(context.Background())
 	}()
 
+	quoteConn := NewQuoteConnWithRetry(cfg)
+	defer quoteConn.Close()
+
 	srv := grpc.NewServer()
-	goback := NewGoBackServer(db, cache, queue)
+	goback := NewGoBackServer(db, cache, queue, quoteConn)
 	api.RegisterGoBackServer(srv, &goback)
 	grpcAddr := fmt.Sprintf("%v:%v", cfg.GrpcIp, cfg.GrpcPort)
 	listener, err := net.Listen("tcp", grpcAddr)

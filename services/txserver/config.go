@@ -12,6 +12,8 @@ type Config struct {
 	CacheIp   string
 	CachePort string
 	QueueUrl  string
+	QuoteIp   string
+	QuotePort string
 }
 
 func NewConfig() *Config {
@@ -50,6 +52,16 @@ func NewConfig() *Config {
 		queueUrl = "amqp://guest:guest@rmq:5672/"
 	}
 
+	quoteIp := os.Getenv("QUOTE_IP")
+	if quoteIp == "" {
+		quoteIp = "quote"
+	}
+
+	quotePort := os.Getenv("QUOTE_PORT")
+	if quotePort == "" {
+		quotePort = "4444"
+	}
+
 	cfg := Config{
 		DbUrl:     dbUrl,
 		DbType:    dbType,
@@ -58,6 +70,8 @@ func NewConfig() *Config {
 		CacheIp:   cacheIp,
 		CachePort: cachePort,
 		QueueUrl:  queueUrl,
+		QuoteIp:   quoteIp,
+		QuotePort: quotePort,
 	}
 
 	return &cfg

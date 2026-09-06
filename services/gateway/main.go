@@ -30,7 +30,6 @@ func NewGrpcClientConnWithRetry(cfg *Config) *grpc.ClientConn {
 			continue
 		}
 
-		slog.Info("gRPC Client ready")
 		break
 	}
 
@@ -39,6 +38,7 @@ func NewGrpcClientConnWithRetry(cfg *Config) *grpc.ClientConn {
 		os.Exit(1)
 	}
 
+	slog.Info("gRPC Client ready")
 	return conn
 }
 
