@@ -2,13 +2,14 @@ services:
   gateway:
     build:
       dockerfile: ./services/gateway/Containerfile
-    networks:
-      - exchange
     depends_on:
+        - rmq
         - txserver
     ports:
       - 8000:8000
     restart: on-failure
+    networks:
+      - exchange
 
 
   txserver:
@@ -16,12 +17,16 @@ services:
       dockerfile: ./services/txserver/Containerfile
     depends_on:
       - cockroach
+      - redis
+      - rmq
     environment:
       - DB_URL=postgresql://root@cockroach:26257/defaultdb?sslmode=disable
-    networks:
-      - exchange
     ports:
       - 50051:50051
+    restart: on-failure
+    networks:
+      - exchange
+
 
   cockroach:
     image: cockroachdb/cockroach:latest
@@ -42,6 +47,13 @@ services:
     networks:
       - exchange
 
+  redis:
+    image: redis:latest
+    restart: on-failure
+    ports:
+      - 6379:6379
+    networks:
+      - exchange
 
 networks:
   exchange:

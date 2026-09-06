@@ -14,9 +14,13 @@ service GoBack {
     rpc CommitTransaction(CommitTxRequest) returns (CommitTxResponse) {};
 }
 
-message AccountRequest {}
+message AccountRequest {
+    string UserId = 1;
+}
 message AccountResponse {}
-message QuoteRequest {}
+message QuoteRequest {
+    string Stock = 1;
+}
 message QuoteResponse {}
 message BuyRequest {}
 message BuyResponse {}
@@ -26,9 +30,20 @@ message AutoBuyRequest {}
 message AutoBuyResponse {}
 message AutoSellRequest {}
 message AutoSellResponse {}
-message TransactionRequest {}
-message TransactionResponse {}
+message TransactionRequest {
+    string UserId = 1;
+}
+message TransactionResponse {
+    repeated Transaction Transactions = 1;
+}
 message CancelTxRequest {}
 message CancelTxResponse {}
 message CommitTxRequest {}
 message CommitTxResponse {}
+message Transaction {
+    string TxId = 1;
+    string UserId = 2;
+    string Timestamp = 3;
+    string Stock = 4;
+    float  Shares = 5;
+}

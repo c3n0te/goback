@@ -2,6 +2,7 @@ package main
 
 import (
 	"api"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -30,12 +31,40 @@ func main() {
 	gbc := api.NewGoBackClient(conn)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /account", func(w http.ResponseWriter, r *http.Request) {
-		CallGetAccount(gbc)
+	mux.HandleFunc("GET /account/{userid}", func(w http.ResponseWriter, r *http.Request) {
+		userId := r.PathValue("userid")
+		accres, err := CallGetAccount(gbc, userId)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(accres)
 	})
 
-	mux.HandleFunc("GET /transactions", func(w http.ResponseWriter, r *http.Request) {
-		CallGetTransactions(gbc)
+	mux.HandleFunc("GET /quote/{ticker}", func(w http.ResponseWriter, r *http.Request) {
+		ticker := r.PathValue("ticker")
+		qres, err := CallGetQuote(gbc, ticker)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(qres)
+	})
+
+	mux.HandleFunc("GET /transactions/{userid}", func(w http.ResponseWriter, r *http.Request) {
+		userId := r.PathValue("userid")
+		txres, err := CallGetTransactions(gbc, userId)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(txres)
 	})
 
 	addr := fmt.Sprintf("%v:%v", cfg.HttpIp, cfg.HttpPort)

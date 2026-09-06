@@ -23,6 +23,7 @@ const (
 
 type AccountRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -55,6 +56,13 @@ func (x *AccountRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use AccountRequest.ProtoReflect.Descriptor instead.
 func (*AccountRequest) Descriptor() ([]byte, []int) {
 	return file_lib_api_goback_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *AccountRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
 }
 
 type AccountResponse struct {
@@ -95,6 +103,7 @@ func (*AccountResponse) Descriptor() ([]byte, []int) {
 
 type QuoteRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Stock         string                 `protobuf:"bytes,1,opt,name=Stock,proto3" json:"Stock,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -127,6 +136,13 @@ func (x *QuoteRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use QuoteRequest.ProtoReflect.Descriptor instead.
 func (*QuoteRequest) Descriptor() ([]byte, []int) {
 	return file_lib_api_goback_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *QuoteRequest) GetStock() string {
+	if x != nil {
+		return x.Stock
+	}
+	return ""
 }
 
 type QuoteResponse struct {
@@ -455,6 +471,7 @@ func (*AutoSellResponse) Descriptor() ([]byte, []int) {
 
 type TransactionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -489,8 +506,16 @@ func (*TransactionRequest) Descriptor() ([]byte, []int) {
 	return file_lib_api_goback_proto_rawDescGZIP(), []int{12}
 }
 
+func (x *TransactionRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
 type TransactionResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Transactions  []*Transaction         `protobuf:"bytes,1,rep,name=Transactions,proto3" json:"Transactions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -523,6 +548,13 @@ func (x *TransactionResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use TransactionResponse.ProtoReflect.Descriptor instead.
 func (*TransactionResponse) Descriptor() ([]byte, []int) {
 	return file_lib_api_goback_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *TransactionResponse) GetTransactions() []*Transaction {
+	if x != nil {
+		return x.Transactions
+	}
+	return nil
 }
 
 type CancelTxRequest struct {
@@ -669,14 +701,92 @@ func (*CommitTxResponse) Descriptor() ([]byte, []int) {
 	return file_lib_api_goback_proto_rawDescGZIP(), []int{17}
 }
 
+type Transaction struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TxId          string                 `protobuf:"bytes,1,opt,name=TxId,proto3" json:"TxId,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	Timestamp     string                 `protobuf:"bytes,3,opt,name=Timestamp,proto3" json:"Timestamp,omitempty"`
+	Stock         string                 `protobuf:"bytes,4,opt,name=Stock,proto3" json:"Stock,omitempty"`
+	Shares        float32                `protobuf:"fixed32,5,opt,name=Shares,proto3" json:"Shares,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Transaction) Reset() {
+	*x = Transaction{}
+	mi := &file_lib_api_goback_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Transaction) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Transaction) ProtoMessage() {}
+
+func (x *Transaction) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Transaction.ProtoReflect.Descriptor instead.
+func (*Transaction) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *Transaction) GetTxId() string {
+	if x != nil {
+		return x.TxId
+	}
+	return ""
+}
+
+func (x *Transaction) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *Transaction) GetTimestamp() string {
+	if x != nil {
+		return x.Timestamp
+	}
+	return ""
+}
+
+func (x *Transaction) GetStock() string {
+	if x != nil {
+		return x.Stock
+	}
+	return ""
+}
+
+func (x *Transaction) GetShares() float32 {
+	if x != nil {
+		return x.Shares
+	}
+	return 0
+}
+
 var File_lib_api_goback_proto protoreflect.FileDescriptor
 
 const file_lib_api_goback_proto_rawDesc = "" +
 	"\n" +
-	"\x14lib/api/goback.proto\x12\x03api\"\x10\n" +
-	"\x0eAccountRequest\"\x11\n" +
-	"\x0fAccountResponse\"\x0e\n" +
-	"\fQuoteRequest\"\x0f\n" +
+	"\x14lib/api/goback.proto\x12\x03api\"(\n" +
+	"\x0eAccountRequest\x12\x16\n" +
+	"\x06UserId\x18\x01 \x01(\tR\x06UserId\"\x11\n" +
+	"\x0fAccountResponse\"$\n" +
+	"\fQuoteRequest\x12\x14\n" +
+	"\x05Stock\x18\x01 \x01(\tR\x05Stock\"\x0f\n" +
 	"\rQuoteResponse\"\f\n" +
 	"\n" +
 	"BuyRequest\"\r\n" +
@@ -686,13 +796,21 @@ const file_lib_api_goback_proto_rawDesc = "" +
 	"\x0eAutoBuyRequest\"\x11\n" +
 	"\x0fAutoBuyResponse\"\x11\n" +
 	"\x0fAutoSellRequest\"\x12\n" +
-	"\x10AutoSellResponse\"\x14\n" +
-	"\x12TransactionRequest\"\x15\n" +
-	"\x13TransactionResponse\"\x11\n" +
+	"\x10AutoSellResponse\",\n" +
+	"\x12TransactionRequest\x12\x16\n" +
+	"\x06UserId\x18\x01 \x01(\tR\x06UserId\"K\n" +
+	"\x13TransactionResponse\x124\n" +
+	"\fTransactions\x18\x01 \x03(\v2\x10.api.TransactionR\fTransactions\"\x11\n" +
 	"\x0fCancelTxRequest\"\x12\n" +
 	"\x10CancelTxResponse\"\x11\n" +
 	"\x0fCommitTxRequest\"\x12\n" +
-	"\x10CommitTxResponse2\xac\x04\n" +
+	"\x10CommitTxResponse\"\x85\x01\n" +
+	"\vTransaction\x12\x12\n" +
+	"\x04TxId\x18\x01 \x01(\tR\x04TxId\x12\x16\n" +
+	"\x06UserId\x18\x02 \x01(\tR\x06UserId\x12\x1c\n" +
+	"\tTimestamp\x18\x03 \x01(\tR\tTimestamp\x12\x14\n" +
+	"\x05Stock\x18\x04 \x01(\tR\x05Stock\x12\x16\n" +
+	"\x06Shares\x18\x05 \x01(\x02R\x06Shares2\xac\x04\n" +
 	"\x06GoBack\x129\n" +
 	"\n" +
 	"GetAccount\x12\x13.api.AccountRequest\x1a\x14.api.AccountResponse\"\x00\x123\n" +
@@ -718,7 +836,7 @@ func file_lib_api_goback_proto_rawDescGZIP() []byte {
 	return file_lib_api_goback_proto_rawDescData
 }
 
-var file_lib_api_goback_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_lib_api_goback_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_lib_api_goback_proto_goTypes = []any{
 	(*AccountRequest)(nil),      // 0: api.AccountRequest
 	(*AccountResponse)(nil),     // 1: api.AccountResponse
@@ -738,31 +856,33 @@ var file_lib_api_goback_proto_goTypes = []any{
 	(*CancelTxResponse)(nil),    // 15: api.CancelTxResponse
 	(*CommitTxRequest)(nil),     // 16: api.CommitTxRequest
 	(*CommitTxResponse)(nil),    // 17: api.CommitTxResponse
+	(*Transaction)(nil),         // 18: api.Transaction
 }
 var file_lib_api_goback_proto_depIdxs = []int32{
-	0,  // 0: api.GoBack.GetAccount:input_type -> api.AccountRequest
-	2,  // 1: api.GoBack.GetQuote:input_type -> api.QuoteRequest
-	4,  // 2: api.GoBack.BuyShares:input_type -> api.BuyRequest
-	6,  // 3: api.GoBack.SellShares:input_type -> api.SellRequest
-	8,  // 4: api.GoBack.AutomatedBuy:input_type -> api.AutoBuyRequest
-	10, // 5: api.GoBack.AutomatedSell:input_type -> api.AutoSellRequest
-	12, // 6: api.GoBack.GetTransactions:input_type -> api.TransactionRequest
-	14, // 7: api.GoBack.CancelTransaction:input_type -> api.CancelTxRequest
-	16, // 8: api.GoBack.CommitTransaction:input_type -> api.CommitTxRequest
-	1,  // 9: api.GoBack.GetAccount:output_type -> api.AccountResponse
-	3,  // 10: api.GoBack.GetQuote:output_type -> api.QuoteResponse
-	5,  // 11: api.GoBack.BuyShares:output_type -> api.BuyResponse
-	7,  // 12: api.GoBack.SellShares:output_type -> api.SellResponse
-	9,  // 13: api.GoBack.AutomatedBuy:output_type -> api.AutoBuyResponse
-	11, // 14: api.GoBack.AutomatedSell:output_type -> api.AutoSellResponse
-	13, // 15: api.GoBack.GetTransactions:output_type -> api.TransactionResponse
-	15, // 16: api.GoBack.CancelTransaction:output_type -> api.CancelTxResponse
-	17, // 17: api.GoBack.CommitTransaction:output_type -> api.CommitTxResponse
-	9,  // [9:18] is the sub-list for method output_type
-	0,  // [0:9] is the sub-list for method input_type
-	0,  // [0:0] is the sub-list for extension type_name
-	0,  // [0:0] is the sub-list for extension extendee
-	0,  // [0:0] is the sub-list for field type_name
+	18, // 0: api.TransactionResponse.Transactions:type_name -> api.Transaction
+	0,  // 1: api.GoBack.GetAccount:input_type -> api.AccountRequest
+	2,  // 2: api.GoBack.GetQuote:input_type -> api.QuoteRequest
+	4,  // 3: api.GoBack.BuyShares:input_type -> api.BuyRequest
+	6,  // 4: api.GoBack.SellShares:input_type -> api.SellRequest
+	8,  // 5: api.GoBack.AutomatedBuy:input_type -> api.AutoBuyRequest
+	10, // 6: api.GoBack.AutomatedSell:input_type -> api.AutoSellRequest
+	12, // 7: api.GoBack.GetTransactions:input_type -> api.TransactionRequest
+	14, // 8: api.GoBack.CancelTransaction:input_type -> api.CancelTxRequest
+	16, // 9: api.GoBack.CommitTransaction:input_type -> api.CommitTxRequest
+	1,  // 10: api.GoBack.GetAccount:output_type -> api.AccountResponse
+	3,  // 11: api.GoBack.GetQuote:output_type -> api.QuoteResponse
+	5,  // 12: api.GoBack.BuyShares:output_type -> api.BuyResponse
+	7,  // 13: api.GoBack.SellShares:output_type -> api.SellResponse
+	9,  // 14: api.GoBack.AutomatedBuy:output_type -> api.AutoBuyResponse
+	11, // 15: api.GoBack.AutomatedSell:output_type -> api.AutoSellResponse
+	13, // 16: api.GoBack.GetTransactions:output_type -> api.TransactionResponse
+	15, // 17: api.GoBack.CancelTransaction:output_type -> api.CancelTxResponse
+	17, // 18: api.GoBack.CommitTransaction:output_type -> api.CommitTxResponse
+	10, // [10:19] is the sub-list for method output_type
+	1,  // [1:10] is the sub-list for method input_type
+	1,  // [1:1] is the sub-list for extension type_name
+	1,  // [1:1] is the sub-list for extension extendee
+	0,  // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_lib_api_goback_proto_init() }
@@ -776,7 +896,7 @@ func file_lib_api_goback_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lib_api_goback_proto_rawDesc), len(file_lib_api_goback_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -5,24 +5,24 @@ import (
 )
 
 type Config struct {
-	DbUrl    string
-	GrpcIp   string
-	GrpcPort string
-	HttpIp   string
-	HttpPort string
-	DbType   string
-	DbHost   string
-	DbPort   string
-	DbUser   string
-	DbPass   string
-	DbName   string
-	DbSsl    string
+	DbUrl     string
+	DbType    string
+	GrpcIp    string
+	GrpcPort  string
+	CacheIp   string
+	CachePort string
+	QueueUrl  string
 }
 
 func NewConfig() *Config {
 	dbUrl := os.Getenv("DB_URL")
 	if dbUrl == "" {
 		dbUrl = "postgresql://root@cockroach:26257/defaultdb?sslmode=disable"
+	}
+
+	dbType := os.Getenv("DB_TYPE")
+	if dbType == "" {
+		dbType = "postgres"
 	}
 
 	grpcAddr := os.Getenv("GRPC_IP")
@@ -35,52 +35,29 @@ func NewConfig() *Config {
 		grpcPort = "50051"
 	}
 
-	db_type := os.Getenv("DB_TYPE")
-	if db_type == "" {
-		db_type = "postgres"
+	cacheIp := os.Getenv("CACHE_IP")
+	if cacheIp == "" {
+		cacheIp = "redis"
 	}
 
-	db_host := os.Getenv("DB_HOST")
-	if db_host == "" {
-		db_host = "127.0.0.1"
+	cachePort := os.Getenv("CACHE_PORT")
+	if cachePort == "" {
+		cachePort = "6379"
 	}
 
-	db_port := os.Getenv("DB_PORT")
-	if db_port == "" {
-		db_port = "26257"
-	}
-
-	db_user := os.Getenv("DB_USER")
-	if db_user == "" {
-		db_user = "postgres"
-	}
-
-	db_pass := os.Getenv("DB_PASS")
-	if db_pass == "" {
-		db_pass = "postgres"
-	}
-
-	db_name := os.Getenv("DB_NAME")
-	if db_name == "" {
-		db_name = "postgres"
-	}
-
-	db_ssl := os.Getenv("DB_SSL")
-	if db_ssl == "" {
-		db_ssl = "disable"
+	queueUrl := os.Getenv("QUEUE_URL")
+	if queueUrl == "" {
+		queueUrl = "amqp://guest:guest@rmq:5672/"
 	}
 
 	cfg := Config{
-		DbUrl:    dbUrl,
-		GrpcIp:   grpcAddr,
-		GrpcPort: grpcPort,
-		DbType:   db_type,
-		DbHost:   db_host,
-		DbPort:   db_port,
-		DbUser:   db_user,
-		DbPass:   db_pass,
-		DbName:   db_name,
-		DbSsl:    db_ssl,
+		DbUrl:     dbUrl,
+		DbType:    dbType,
+		GrpcIp:    grpcAddr,
+		GrpcPort:  grpcPort,
+		CacheIp:   cacheIp,
+		CachePort: cachePort,
+		QueueUrl:  queueUrl,
 	}
 
 	return &cfg
