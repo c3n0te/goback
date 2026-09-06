@@ -6,13 +6,14 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"os"
 	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func NewGrpcClientWithRetry(cfg *Config) *grpc.ClientConn {
+func NewGrpcClientConnWithRetry(cfg *Config) *grpc.ClientConn {
 	var conn *grpc.ClientConn
 	var err error
 
@@ -23,8 +24,8 @@ func NewGrpcClientWithRetry(cfg *Config) *grpc.ClientConn {
 		)
 
 		if err != nil {
-			slog.Error("Failed to connect to gRPC server", "error", err)
-			slog.Info("DB Not ready, sleeping for 3 seconds")
+			slog.Error("Failed to connect to gRPC server: %v", "error", err)
+			slog.Info("gRPC server not ready, sleeping for 3 seconds")
 			time.Sleep(3 * time.Second)
 			continue
 		}
@@ -33,15 +34,19 @@ func NewGrpcClientWithRetry(cfg *Config) *grpc.ClientConn {
 		break
 	}
 
+	if conn == nil {
+		slog.Error("Failed to connect to gRPC server")
+		os.Exit(1)
+	}
+
 	return conn
 }
 
 func main() {
 	cfg := NewConfig()
 
-	conn := NewGrpcClientWithRetry(cfg)
+	conn := NewGrpcClientConnWithRetry(cfg)
 	defer conn.Close()
-
 	gbc := api.NewGoBackClient(conn)
 
 	mux := http.NewServeMux()

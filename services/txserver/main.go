@@ -25,7 +25,7 @@ func NewDbWithRetry(cfg *Config) *sqlx.DB {
 	for range 5 {
 		db, err = sqlx.Connect(cfg.DbType, cfg.DbUrl)
 		if err != nil {
-			slog.Error("Failed to connect to DB", "error", err)
+			slog.Error("Failed to connect to DB: ", "error", err)
 			slog.Info("DB Not ready, sleeping for 3 seconds")
 			time.Sleep(3 * time.Second)
 			continue
@@ -34,6 +34,12 @@ func NewDbWithRetry(cfg *Config) *sqlx.DB {
 		slog.Info("DB ready")
 		break
 	}
+
+	if db == nil {
+		slog.Error("Failed to connect to DB")
+		os.Exit(1)
+	}
+
 	return db
 }
 
@@ -53,6 +59,7 @@ func NewCacheWithRetry(cfg *Config) *redis.Client {
 	pong, err := rdb.Ping(ctx).Result()
 	if err != nil {
 		slog.Error("Could not connect to Redis: ", "error", err)
+		os.Exit(1)
 	}
 
 	slog.Info(fmt.Sprintf("Cache ready: %v", pong))
@@ -76,6 +83,11 @@ func NewQueueWithRetry(cfg *Config) (*rmq.AmqpConnection, *rmq.Environment) {
 
 		slog.Info("Queue ready")
 		break
+	}
+
+	if conn == nil || env == nil {
+		slog.Error("Failed to connect to Queue")
+		os.Exit(1)
 	}
 
 	return conn, env
