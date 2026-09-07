@@ -3,6 +3,7 @@ option go_package = "./api";
 package api;
 
 service GoBack {
+    rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse) {};
     rpc GetAccount(AccountRequest) returns (AccountResponse) {};
     rpc GetQuote(QuoteRequest) returns (QuoteResponse) {};
     rpc BuyShares(BuyRequest) returns (BuyResponse) {};
@@ -14,10 +15,26 @@ service GoBack {
     rpc CommitTransaction(CommitTxRequest) returns (CommitTxResponse) {};
 }
 
+message CreateAccountRequest {
+    string UserId = 1;
+    string Username = 2;
+    string Email = 3;
+    string Password = 4;
+    float  Balance = 5;
+}
+message CreateAccountResponse {
+    string UserId = 1;
+}
 message AccountRequest {
     string UserId = 1;
 }
-message AccountResponse {}
+message AccountResponse {
+    string UserId = 1;
+    string Username = 2;
+    string Email = 3;
+    string Password = 4;
+    float  Balance = 5;
+}
 message QuoteRequest {
     string Stock = 1;
 }
@@ -37,7 +54,8 @@ message TransactionRequest {
     string UserId = 1;
 }
 message TransactionResponse {
-    repeated Transaction Transactions = 1;
+    string UserId = 1;
+    repeated Transaction Transactions = 2;
 }
 message CancelTxRequest {}
 message CancelTxResponse {}

@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	GoBack_CreateAccount_FullMethodName     = "/api.GoBack/CreateAccount"
 	GoBack_GetAccount_FullMethodName        = "/api.GoBack/GetAccount"
 	GoBack_GetQuote_FullMethodName          = "/api.GoBack/GetQuote"
 	GoBack_BuyShares_FullMethodName         = "/api.GoBack/BuyShares"
@@ -34,6 +35,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GoBackClient interface {
+	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
 	GetAccount(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error)
 	GetQuote(ctx context.Context, in *QuoteRequest, opts ...grpc.CallOption) (*QuoteResponse, error)
 	BuyShares(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
@@ -51,6 +53,16 @@ type goBackClient struct {
 
 func NewGoBackClient(cc grpc.ClientConnInterface) GoBackClient {
 	return &goBackClient{cc}
+}
+
+func (c *goBackClient) CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateAccountResponse)
+	err := c.cc.Invoke(ctx, GoBack_CreateAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *goBackClient) GetAccount(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
@@ -147,6 +159,7 @@ func (c *goBackClient) CommitTransaction(ctx context.Context, in *CommitTxReques
 // All implementations must embed UnimplementedGoBackServer
 // for forward compatibility.
 type GoBackServer interface {
+	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
 	GetAccount(context.Context, *AccountRequest) (*AccountResponse, error)
 	GetQuote(context.Context, *QuoteRequest) (*QuoteResponse, error)
 	BuyShares(context.Context, *BuyRequest) (*BuyResponse, error)
@@ -166,6 +179,9 @@ type GoBackServer interface {
 // pointer dereference when methods are called.
 type UnimplementedGoBackServer struct{}
 
+func (UnimplementedGoBackServer) CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateAccount not implemented")
+}
 func (UnimplementedGoBackServer) GetAccount(context.Context, *AccountRequest) (*AccountResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAccount not implemented")
 }
@@ -212,6 +228,24 @@ func RegisterGoBackServer(s grpc.ServiceRegistrar, srv GoBackServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&GoBack_ServiceDesc, srv)
+}
+
+func _GoBack_CreateAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoBackServer).CreateAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoBack_CreateAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoBackServer).CreateAccount(ctx, req.(*CreateAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _GoBack_GetAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -383,6 +417,10 @@ var GoBack_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "api.GoBack",
 	HandlerType: (*GoBackServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateAccount",
+			Handler:    _GoBack_CreateAccount_Handler,
+		},
 		{
 			MethodName: "GetAccount",
 			Handler:    _GoBack_GetAccount_Handler,

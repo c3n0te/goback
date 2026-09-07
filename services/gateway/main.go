@@ -50,6 +50,24 @@ func main() {
 	gbc := api.NewGoBackClient(conn)
 
 	mux := http.NewServeMux()
+	mux.HandleFunc("POST /account", func(w http.ResponseWriter, r *http.Request) {
+		var newAccount api.CreateAccountRequest
+		if err := json.NewDecoder(r.Body).Decode(&newAccount); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		createAccountRes, err := CallCreateAccount(gbc)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(createAccountRes)
+	})
+
 	mux.HandleFunc("GET /account/{userid}", func(w http.ResponseWriter, r *http.Request) {
 		userId := r.PathValue("userid")
 		accres, err := CallGetAccount(gbc, userId)

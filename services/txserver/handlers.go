@@ -25,19 +25,41 @@ type GoBackServer struct {
 }
 
 func NewGoBackServer(db *sqlx.DB, cache *redis.Client, queue *rmq.AmqpConnection, quoteConn net.Conn) GoBackServer {
-	gateway := GoBackServer{
+	goback := GoBackServer{
 		DB:    db,
 		Cache: cache,
 		Queue: queue,
 		Quote: quoteConn,
 	}
 
-	return gateway
+	return goback
+}
+
+func (srv *GoBackServer) CreateAccount(ctx context.Context, req *api.CreateAccountRequest) (*api.CreateAccountResponse, error) {
+	slog.Info("Creating New User Account")
+	createAccountRes, err := InsertAccount(srv.DB, req)
+	if err != nil {
+		slog.Error("Failed to insert account information", "error", err)
+		return nil, err
+	}
+
+	return createAccountRes, nil
 }
 
 func (srv *GoBackServer) GetAccount(ctx context.Context, req *api.AccountRequest) (*api.AccountResponse, error) {
 	slog.Info("Retrieving Account Information")
-	accres := &api.AccountResponse{}
+	userId, err := uuid.Parse(req.UserId)
+	if err != nil {
+		slog.Error("Failed to parse Transaction UserId", "error", err)
+		return nil, err
+	}
+
+	accres, err := ReadAccountWhereUserId(srv.DB, userId)
+	if err != nil {
+		slog.Error("Failed to retrieve account information from DB", "error", err)
+		return nil, err
+	}
+
 	return accres, nil
 }
 
@@ -84,12 +106,20 @@ func (srv *GoBackServer) GetQuote(ctx context.Context, req *api.QuoteRequest) (*
 
 func (srv *GoBackServer) GetTransactions(ctx context.Context, req *api.TransactionRequest) (*api.TransactionResponse, error) {
 	slog.Info("Retrieving Transaction Logs")
-	txLogs := []*api.Transaction{
-		{TxId: uuid.NewV4().String(), UserId: uuid.NewV4().String(), Timestamp: time.Now().UTC().Format(time.RFC3339), Stock: "AAPL", Shares: 1000.0},
-		{TxId: uuid.NewV4().String(), UserId: uuid.NewV4().String(), Timestamp: time.Now().UTC().Format(time.RFC3339), Stock: "GOOG", Shares: 5000.0},
+	userId, err := uuid.Parse(req.UserId)
+	if err != nil {
+		slog.Error("Failed to parse Transaction UserId", "error", err)
+		return nil, err
+	}
+
+	txLogs, err := ReadTransactions(srv.DB, userId)
+	if err != nil {
+		slog.Error("Failed to retrieve transaction logs from DB", "error", err)
+		return nil, err
 	}
 
 	txres := &api.TransactionResponse{
+		UserId:       userId.String(),
 		Transactions: txLogs,
 	}
 
