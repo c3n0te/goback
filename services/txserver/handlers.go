@@ -37,6 +37,7 @@ func NewGoBackServer(db *sqlx.DB, cache *redis.Client, queue *rmq.AmqpConnection
 
 func (srv *GoBackServer) CreateAccount(ctx context.Context, req *api.CreateAccountRequest) (*api.CreateAccountResponse, error) {
 	slog.Info("Creating New User Account")
+	req.UserId = uuid.NewV4().String()
 	createAccountRes, err := InsertAccount(srv.DB, req)
 	if err != nil {
 		slog.Error("Failed to insert account information", "error", err)

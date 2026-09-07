@@ -57,7 +57,7 @@ func main() {
 			return
 		}
 
-		createAccountRes, err := CallCreateAccount(gbc)
+		createAccountRes, err := CallCreateAccount(gbc, &newAccount)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return

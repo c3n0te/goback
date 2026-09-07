@@ -5,24 +5,15 @@ import (
 	"context"
 	"log/slog"
 	"time"
-	"uuid"
 
 	"google.golang.org/grpc/metadata"
 )
 
-func CallCreateAccount(gbc api.GoBackClient) (*api.CreateAccountResponse, error) {
+func CallCreateAccount(gbc api.GoBackClient, newAccount *api.CreateAccountRequest) (*api.CreateAccountResponse, error) {
 	md := metadata.Pairs("timestamp", time.Now().UTC().Format(time.StampNano))
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
-	createAccountReq := &api.CreateAccountRequest{
-		UserId:   uuid.NewV4().String(),
-		Username: "c3n0te",
-		Email:    "c3n0te@gmail.com",
-		Password: "secret",
-		Balance:  1000.0,
-	}
-
 	slog.Info("Calling CreateAccount")
-	resp, err := gbc.CreateAccount(ctx, createAccountReq)
+	resp, err := gbc.CreateAccount(ctx, newAccount)
 	if err != nil {
 		slog.Error("Failed to create account: ", "error", err)
 		return nil, err
