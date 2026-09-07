@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net"
+	"strings"
 	"time"
 	"uuid"
 
@@ -42,16 +43,40 @@ func (srv *GoBackServer) GetAccount(ctx context.Context, req *api.AccountRequest
 
 func (srv *GoBackServer) GetQuote(ctx context.Context, req *api.QuoteRequest) (*api.QuoteResponse, error) {
 	slog.Info("Retrieving Stock Quote")
-	reader := bufio.NewReader(srv.Quote)
-	srv.Quote.Write([]byte("AAPL\n"))
-	resp, err := reader.ReadString('\n')
-	if err != nil {
-		slog.Error("Failed to read Quote Server quote: ", "error", err)
+	stockPrice := ""
+	var err error
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	stockPrice, err = srv.Cache.Get(ctx, req.Stock).Result()
+	if err == redis.Nil {
+		slog.Info("Stock Price Not In Cache")
+		reader := bufio.NewReader(srv.Quote)
+		msg := fmt.Sprintf("%v\n", req.Stock)
+		srv.Quote.Write([]byte(msg))
+		resp, err := reader.ReadString('\n')
+		if err != nil {
+			slog.Error("Failed to read Quote Server quote: ", "error", err)
+			return nil, err
+		}
+
+		slog.Info(fmt.Sprintf("Quote Server response: %v", resp))
+		stockPrice = strings.Split(resp, ",")[1]
+		err = srv.Cache.Set(ctx, req.Stock, stockPrice, 1*time.Second).Err()
+		if err != nil {
+			slog.Error("Failed to set stock price in cache", "error", err)
+			return nil, err
+		}
+	} else if err != nil {
+		slog.Error("Failed to retrieve stock ticker from cache", "error", err)
 		return nil, err
 	}
 
-	slog.Info(fmt.Sprintf("Quote Server response: %v", resp))
-	qres := &api.QuoteResponse{}
+	qres := &api.QuoteResponse{
+		Stock: req.Stock,
+		Price: stockPrice,
+	}
+
 	return qres, nil
 }
 

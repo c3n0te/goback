@@ -147,6 +147,8 @@ func (x *QuoteRequest) GetStock() string {
 
 type QuoteResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Stock         string                 `protobuf:"bytes,1,opt,name=Stock,proto3" json:"Stock,omitempty"`
+	Price         string                 `protobuf:"bytes,2,opt,name=Price,proto3" json:"Price,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -179,6 +181,20 @@ func (x *QuoteResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use QuoteResponse.ProtoReflect.Descriptor instead.
 func (*QuoteResponse) Descriptor() ([]byte, []int) {
 	return file_lib_api_goback_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *QuoteResponse) GetStock() string {
+	if x != nil {
+		return x.Stock
+	}
+	return ""
+}
+
+func (x *QuoteResponse) GetPrice() string {
+	if x != nil {
+		return x.Price
+	}
+	return ""
 }
 
 type BuyRequest struct {
@@ -786,8 +802,10 @@ const file_lib_api_goback_proto_rawDesc = "" +
 	"\x06UserId\x18\x01 \x01(\tR\x06UserId\"\x11\n" +
 	"\x0fAccountResponse\"$\n" +
 	"\fQuoteRequest\x12\x14\n" +
-	"\x05Stock\x18\x01 \x01(\tR\x05Stock\"\x0f\n" +
-	"\rQuoteResponse\"\f\n" +
+	"\x05Stock\x18\x01 \x01(\tR\x05Stock\";\n" +
+	"\rQuoteResponse\x12\x14\n" +
+	"\x05Stock\x18\x01 \x01(\tR\x05Stock\x12\x14\n" +
+	"\x05Price\x18\x02 \x01(\tR\x05Price\"\f\n" +
 	"\n" +
 	"BuyRequest\"\r\n" +
 	"\vBuyResponse\"\r\n" +

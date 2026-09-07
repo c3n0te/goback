@@ -32,6 +32,7 @@ func CallGetQuote(gbc api.GoBackClient, ticker string) (*api.QuoteResponse, erro
 		Stock: ticker,
 	}
 
+	slog.Info("Calling GetQuote")
 	resp, err := gbc.GetQuote(ctx, qreq)
 	if err != nil {
 		slog.Error("Failed to retrieve stock quote: ", "error", err)

@@ -3,7 +3,6 @@ services:
     build:
       dockerfile: ./services/gateway/Containerfile
     depends_on:
-        - rmq
         - txserver
     ports:
       - 8000:8000

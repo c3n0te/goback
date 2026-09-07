@@ -21,7 +21,10 @@ message AccountResponse {}
 message QuoteRequest {
     string Stock = 1;
 }
-message QuoteResponse {}
+message QuoteResponse {
+    string Stock = 1;
+    string Price = 2;
+}
 message BuyRequest {}
 message BuyResponse {}
 message SellRequest {}

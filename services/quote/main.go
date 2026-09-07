@@ -60,7 +60,7 @@ func HandleClient(conn net.Conn) {
 
 		ticker := strings.TrimSpace(msg)
 		price, ts, key := GenerateQuote()
-		_, err = conn.Write([]byte(fmt.Sprintf("%v,%v,%v,%v\n", ticker, price, ts, key)))
+		_, err = conn.Write([]byte(fmt.Sprintf("%v,%.2f,%v,%v\n", ticker, price, ts, key)))
 		if err != nil {
 			slog.Error("TCP Write error: ", "error", err)
 			return
