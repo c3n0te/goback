@@ -43,7 +43,7 @@ func (srv *GoBackServer) GetAccount(ctx context.Context, req *api.AccountRequest
 
 func (srv *GoBackServer) GetQuote(ctx context.Context, req *api.QuoteRequest) (*api.QuoteResponse, error) {
 	slog.Info("Retrieving Stock Quote")
-	stockPrice := ""
+	var stockPrice string
 	var err error
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -70,6 +70,8 @@ func (srv *GoBackServer) GetQuote(ctx context.Context, req *api.QuoteRequest) (*
 	} else if err != nil {
 		slog.Error("Failed to retrieve stock ticker from cache", "error", err)
 		return nil, err
+	} else {
+		slog.Info("Stock Price In Cache")
 	}
 
 	qres := &api.QuoteResponse{

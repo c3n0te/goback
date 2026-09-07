@@ -4,7 +4,7 @@ RUN apt update && apt -y dist-upgrade
 COPY . .
 RUN cd ./services/txserver && CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /bin/txserver .
 
-FROM alpine:latest AS runtime
+FROM scratch AS runtime
 COPY --from=builder /bin/txserver /bin/txserver
 EXPOSE 50051
 ENTRYPOINT ["/bin/txserver"]

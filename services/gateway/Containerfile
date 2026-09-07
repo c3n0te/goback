@@ -4,7 +4,7 @@ RUN apt update && apt -y dist-upgrade
 COPY . .
 RUN cd ./services/gateway && CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /bin/gateway .
 
-FROM alpine:latest AS runtime
+FROM scratch AS runtime
 COPY --from=builder /bin/gateway /bin/gateway
 EXPOSE 8000
 EXPOSE 50051

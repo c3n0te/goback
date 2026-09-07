@@ -16,6 +16,7 @@ func CallGetAccount(gbc api.GoBackClient, userId string) (*api.AccountResponse, 
 		UserId: userId,
 	}
 
+	slog.Info("Calling GetAccount")
 	resp, err := gbc.GetAccount(ctx, accreq)
 	if err != nil {
 		slog.Error("Failed to register gateway gRPC client: ", "error", err)
@@ -49,6 +50,7 @@ func CallGetTransactions(gbc api.GoBackClient, userId string) (*api.TransactionR
 		UserId: userId,
 	}
 
+	slog.Info("Calling GetTransactions")
 	resp, err := gbc.GetTransactions(ctx, txreq)
 	if err != nil {
 		slog.Error("Failed to retrieve transaction logs: ", "error", err)

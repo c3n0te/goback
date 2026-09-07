@@ -47,7 +47,7 @@ services:
       - exchange
 
   rmq:
-    image: rabbitmq:latest
+    image: rabbitmq:alpine
     ports:
       - 5672:5672
       - 15692:15692
@@ -55,7 +55,7 @@ services:
       - exchange
 
   redis:
-    image: redis:latest
+    image: redis:alpine
     restart: on-failure
     ports:
       - 6379:6379
