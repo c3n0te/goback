@@ -4,10 +4,15 @@ import (
 	"api"
 	"bufio"
 	"context"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net"
+	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 	"uuid"
 
@@ -20,11 +25,11 @@ type GoBackServer struct {
 	api.GoBackServer
 	DB    *sqlx.DB
 	Cache *redis.Client
-	Queue *rmq.AmqpConnection
+	Queue *rmq.Consumer
 	Quote net.Conn
 }
 
-func NewGoBackServer(db *sqlx.DB, cache *redis.Client, queue *rmq.AmqpConnection, quoteConn net.Conn) GoBackServer {
+func NewGoBackServer(db *sqlx.DB, cache *redis.Client, queue *rmq.Consumer, quoteConn net.Conn) GoBackServer {
 	goback := GoBackServer{
 		DB:    db,
 		Cache: cache,
@@ -33,6 +38,35 @@ func NewGoBackServer(db *sqlx.DB, cache *redis.Client, queue *rmq.AmqpConnection
 	}
 
 	return goback
+}
+
+func (srv *GoBackServer) ConsumeQueue() {
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+
+	for {
+		delivery, err := srv.Queue.Receive(ctx)
+		if err != nil {
+			if errors.Is(err, context.Canceled) {
+				slog.Info("Shutting down gracefully...")
+				return
+			}
+
+			slog.Error("Failed to receive a message: ", "error", err)
+			continue
+		}
+
+		msg := delivery.Message()
+		rawBytes := msg.Data[0]
+		var newTxRequest api.TxRequest
+		if err := json.Unmarshal(rawBytes, &newTxRequest); err != nil {
+			slog.Error("Failed to unmarshal queue message into TxRequest: ", "error", err)
+		} else {
+			delivery.Accept(ctx)
+			slog.Info(fmt.Sprintf("TxRequest: %v", &newTxRequest))
+		}
+
+	}
 }
 
 func (srv *GoBackServer) CreateAccount(ctx context.Context, req *api.CreateAccountRequest) (*api.CreateAccountResponse, error) {
@@ -105,7 +139,7 @@ func (srv *GoBackServer) GetQuote(ctx context.Context, req *api.QuoteRequest) (*
 	return qres, nil
 }
 
-func (srv *GoBackServer) GetTransactions(ctx context.Context, req *api.TransactionRequest) (*api.TransactionResponse, error) {
+func (srv *GoBackServer) GetTransactionLogs(ctx context.Context, req *api.TransactionLogRequest) (*api.TransactionLogResponse, error) {
 	slog.Info("Retrieving Transaction Logs")
 	userId, err := uuid.Parse(req.UserId)
 	if err != nil {
@@ -113,13 +147,13 @@ func (srv *GoBackServer) GetTransactions(ctx context.Context, req *api.Transacti
 		return nil, err
 	}
 
-	txLogs, err := ReadTransactions(srv.DB, userId)
+	txLogs, err := ReadTransactionsWhereUserId(srv.DB, userId)
 	if err != nil {
 		slog.Error("Failed to retrieve transaction logs from DB", "error", err)
 		return nil, err
 	}
 
-	txres := &api.TransactionResponse{
+	txres := &api.TransactionLogResponse{
 		UserId:       userId.String(),
 		Transactions: txLogs,
 	}

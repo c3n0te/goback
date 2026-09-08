@@ -12,6 +12,7 @@ type Config struct {
 	CacheIp   string
 	CachePort string
 	QueueUrl  string
+	QueueName string
 	QuoteIp   string
 	QuotePort string
 }
@@ -52,6 +53,11 @@ func NewConfig() *Config {
 		queueUrl = "amqp://guest:guest@rmq:5672/"
 	}
 
+	queueName := os.Getenv("QUEUE_NAME")
+	if queueName == "" {
+		queueName = "transactions"
+	}
+
 	quoteIp := os.Getenv("QUOTE_IP")
 	if quoteIp == "" {
 		quoteIp = "quote"
@@ -70,6 +76,7 @@ func NewConfig() *Config {
 		CacheIp:   cacheIp,
 		CachePort: cachePort,
 		QueueUrl:  queueUrl,
+		QueueName: queueName,
 		QuoteIp:   quoteIp,
 		QuotePort: quotePort,
 	}

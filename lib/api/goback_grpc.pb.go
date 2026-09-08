@@ -19,16 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	GoBack_CreateAccount_FullMethodName     = "/api.GoBack/CreateAccount"
-	GoBack_GetAccount_FullMethodName        = "/api.GoBack/GetAccount"
-	GoBack_GetQuote_FullMethodName          = "/api.GoBack/GetQuote"
-	GoBack_BuyShares_FullMethodName         = "/api.GoBack/BuyShares"
-	GoBack_SellShares_FullMethodName        = "/api.GoBack/SellShares"
-	GoBack_AutomatedBuy_FullMethodName      = "/api.GoBack/AutomatedBuy"
-	GoBack_AutomatedSell_FullMethodName     = "/api.GoBack/AutomatedSell"
-	GoBack_GetTransactions_FullMethodName   = "/api.GoBack/GetTransactions"
-	GoBack_CancelTransaction_FullMethodName = "/api.GoBack/CancelTransaction"
-	GoBack_CommitTransaction_FullMethodName = "/api.GoBack/CommitTransaction"
+	GoBack_CreateAccount_FullMethodName      = "/api.GoBack/CreateAccount"
+	GoBack_GetAccount_FullMethodName         = "/api.GoBack/GetAccount"
+	GoBack_GetQuote_FullMethodName           = "/api.GoBack/GetQuote"
+	GoBack_BuyShares_FullMethodName          = "/api.GoBack/BuyShares"
+	GoBack_SellShares_FullMethodName         = "/api.GoBack/SellShares"
+	GoBack_AutomatedBuy_FullMethodName       = "/api.GoBack/AutomatedBuy"
+	GoBack_AutomatedSell_FullMethodName      = "/api.GoBack/AutomatedSell"
+	GoBack_GetTransactionLogs_FullMethodName = "/api.GoBack/GetTransactionLogs"
+	GoBack_CancelTransaction_FullMethodName  = "/api.GoBack/CancelTransaction"
+	GoBack_CommitTransaction_FullMethodName  = "/api.GoBack/CommitTransaction"
 )
 
 // GoBackClient is the client API for GoBack service.
@@ -38,11 +38,11 @@ type GoBackClient interface {
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
 	GetAccount(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error)
 	GetQuote(ctx context.Context, in *QuoteRequest, opts ...grpc.CallOption) (*QuoteResponse, error)
-	BuyShares(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
-	SellShares(ctx context.Context, in *SellRequest, opts ...grpc.CallOption) (*SellResponse, error)
-	AutomatedBuy(ctx context.Context, in *AutoBuyRequest, opts ...grpc.CallOption) (*AutoBuyResponse, error)
-	AutomatedSell(ctx context.Context, in *AutoSellRequest, opts ...grpc.CallOption) (*AutoSellResponse, error)
-	GetTransactions(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionResponse, error)
+	BuyShares(ctx context.Context, in *TxRequest, opts ...grpc.CallOption) (*TxResponse, error)
+	SellShares(ctx context.Context, in *TxRequest, opts ...grpc.CallOption) (*TxResponse, error)
+	AutomatedBuy(ctx context.Context, in *TxRequest, opts ...grpc.CallOption) (*TxResponse, error)
+	AutomatedSell(ctx context.Context, in *TxRequest, opts ...grpc.CallOption) (*TxResponse, error)
+	GetTransactionLogs(ctx context.Context, in *TransactionLogRequest, opts ...grpc.CallOption) (*TransactionLogResponse, error)
 	CancelTransaction(ctx context.Context, in *CancelTxRequest, opts ...grpc.CallOption) (*CancelTxResponse, error)
 	CommitTransaction(ctx context.Context, in *CommitTxRequest, opts ...grpc.CallOption) (*CommitTxResponse, error)
 }
@@ -85,9 +85,9 @@ func (c *goBackClient) GetQuote(ctx context.Context, in *QuoteRequest, opts ...g
 	return out, nil
 }
 
-func (c *goBackClient) BuyShares(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error) {
+func (c *goBackClient) BuyShares(ctx context.Context, in *TxRequest, opts ...grpc.CallOption) (*TxResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(BuyResponse)
+	out := new(TxResponse)
 	err := c.cc.Invoke(ctx, GoBack_BuyShares_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -95,9 +95,9 @@ func (c *goBackClient) BuyShares(ctx context.Context, in *BuyRequest, opts ...gr
 	return out, nil
 }
 
-func (c *goBackClient) SellShares(ctx context.Context, in *SellRequest, opts ...grpc.CallOption) (*SellResponse, error) {
+func (c *goBackClient) SellShares(ctx context.Context, in *TxRequest, opts ...grpc.CallOption) (*TxResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SellResponse)
+	out := new(TxResponse)
 	err := c.cc.Invoke(ctx, GoBack_SellShares_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -105,9 +105,9 @@ func (c *goBackClient) SellShares(ctx context.Context, in *SellRequest, opts ...
 	return out, nil
 }
 
-func (c *goBackClient) AutomatedBuy(ctx context.Context, in *AutoBuyRequest, opts ...grpc.CallOption) (*AutoBuyResponse, error) {
+func (c *goBackClient) AutomatedBuy(ctx context.Context, in *TxRequest, opts ...grpc.CallOption) (*TxResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AutoBuyResponse)
+	out := new(TxResponse)
 	err := c.cc.Invoke(ctx, GoBack_AutomatedBuy_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -115,9 +115,9 @@ func (c *goBackClient) AutomatedBuy(ctx context.Context, in *AutoBuyRequest, opt
 	return out, nil
 }
 
-func (c *goBackClient) AutomatedSell(ctx context.Context, in *AutoSellRequest, opts ...grpc.CallOption) (*AutoSellResponse, error) {
+func (c *goBackClient) AutomatedSell(ctx context.Context, in *TxRequest, opts ...grpc.CallOption) (*TxResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AutoSellResponse)
+	out := new(TxResponse)
 	err := c.cc.Invoke(ctx, GoBack_AutomatedSell_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -125,10 +125,10 @@ func (c *goBackClient) AutomatedSell(ctx context.Context, in *AutoSellRequest, o
 	return out, nil
 }
 
-func (c *goBackClient) GetTransactions(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionResponse, error) {
+func (c *goBackClient) GetTransactionLogs(ctx context.Context, in *TransactionLogRequest, opts ...grpc.CallOption) (*TransactionLogResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TransactionResponse)
-	err := c.cc.Invoke(ctx, GoBack_GetTransactions_FullMethodName, in, out, cOpts...)
+	out := new(TransactionLogResponse)
+	err := c.cc.Invoke(ctx, GoBack_GetTransactionLogs_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -162,11 +162,11 @@ type GoBackServer interface {
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
 	GetAccount(context.Context, *AccountRequest) (*AccountResponse, error)
 	GetQuote(context.Context, *QuoteRequest) (*QuoteResponse, error)
-	BuyShares(context.Context, *BuyRequest) (*BuyResponse, error)
-	SellShares(context.Context, *SellRequest) (*SellResponse, error)
-	AutomatedBuy(context.Context, *AutoBuyRequest) (*AutoBuyResponse, error)
-	AutomatedSell(context.Context, *AutoSellRequest) (*AutoSellResponse, error)
-	GetTransactions(context.Context, *TransactionRequest) (*TransactionResponse, error)
+	BuyShares(context.Context, *TxRequest) (*TxResponse, error)
+	SellShares(context.Context, *TxRequest) (*TxResponse, error)
+	AutomatedBuy(context.Context, *TxRequest) (*TxResponse, error)
+	AutomatedSell(context.Context, *TxRequest) (*TxResponse, error)
+	GetTransactionLogs(context.Context, *TransactionLogRequest) (*TransactionLogResponse, error)
 	CancelTransaction(context.Context, *CancelTxRequest) (*CancelTxResponse, error)
 	CommitTransaction(context.Context, *CommitTxRequest) (*CommitTxResponse, error)
 	mustEmbedUnimplementedGoBackServer()
@@ -188,20 +188,20 @@ func (UnimplementedGoBackServer) GetAccount(context.Context, *AccountRequest) (*
 func (UnimplementedGoBackServer) GetQuote(context.Context, *QuoteRequest) (*QuoteResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetQuote not implemented")
 }
-func (UnimplementedGoBackServer) BuyShares(context.Context, *BuyRequest) (*BuyResponse, error) {
+func (UnimplementedGoBackServer) BuyShares(context.Context, *TxRequest) (*TxResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method BuyShares not implemented")
 }
-func (UnimplementedGoBackServer) SellShares(context.Context, *SellRequest) (*SellResponse, error) {
+func (UnimplementedGoBackServer) SellShares(context.Context, *TxRequest) (*TxResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method SellShares not implemented")
 }
-func (UnimplementedGoBackServer) AutomatedBuy(context.Context, *AutoBuyRequest) (*AutoBuyResponse, error) {
+func (UnimplementedGoBackServer) AutomatedBuy(context.Context, *TxRequest) (*TxResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AutomatedBuy not implemented")
 }
-func (UnimplementedGoBackServer) AutomatedSell(context.Context, *AutoSellRequest) (*AutoSellResponse, error) {
+func (UnimplementedGoBackServer) AutomatedSell(context.Context, *TxRequest) (*TxResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AutomatedSell not implemented")
 }
-func (UnimplementedGoBackServer) GetTransactions(context.Context, *TransactionRequest) (*TransactionResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetTransactions not implemented")
+func (UnimplementedGoBackServer) GetTransactionLogs(context.Context, *TransactionLogRequest) (*TransactionLogResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTransactionLogs not implemented")
 }
 func (UnimplementedGoBackServer) CancelTransaction(context.Context, *CancelTxRequest) (*CancelTxResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CancelTransaction not implemented")
@@ -285,7 +285,7 @@ func _GoBack_GetQuote_Handler(srv interface{}, ctx context.Context, dec func(int
 }
 
 func _GoBack_BuyShares_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BuyRequest)
+	in := new(TxRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -297,13 +297,13 @@ func _GoBack_BuyShares_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: GoBack_BuyShares_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoBackServer).BuyShares(ctx, req.(*BuyRequest))
+		return srv.(GoBackServer).BuyShares(ctx, req.(*TxRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _GoBack_SellShares_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SellRequest)
+	in := new(TxRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -315,13 +315,13 @@ func _GoBack_SellShares_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: GoBack_SellShares_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoBackServer).SellShares(ctx, req.(*SellRequest))
+		return srv.(GoBackServer).SellShares(ctx, req.(*TxRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _GoBack_AutomatedBuy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AutoBuyRequest)
+	in := new(TxRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -333,13 +333,13 @@ func _GoBack_AutomatedBuy_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: GoBack_AutomatedBuy_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoBackServer).AutomatedBuy(ctx, req.(*AutoBuyRequest))
+		return srv.(GoBackServer).AutomatedBuy(ctx, req.(*TxRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _GoBack_AutomatedSell_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AutoSellRequest)
+	in := new(TxRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -351,25 +351,25 @@ func _GoBack_AutomatedSell_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: GoBack_AutomatedSell_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoBackServer).AutomatedSell(ctx, req.(*AutoSellRequest))
+		return srv.(GoBackServer).AutomatedSell(ctx, req.(*TxRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GoBack_GetTransactions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TransactionRequest)
+func _GoBack_GetTransactionLogs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransactionLogRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GoBackServer).GetTransactions(ctx, in)
+		return srv.(GoBackServer).GetTransactionLogs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GoBack_GetTransactions_FullMethodName,
+		FullMethod: GoBack_GetTransactionLogs_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GoBackServer).GetTransactions(ctx, req.(*TransactionRequest))
+		return srv.(GoBackServer).GetTransactionLogs(ctx, req.(*TransactionLogRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -446,8 +446,8 @@ var GoBack_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _GoBack_AutomatedSell_Handler,
 		},
 		{
-			MethodName: "GetTransactions",
-			Handler:    _GoBack_GetTransactions_Handler,
+			MethodName: "GetTransactionLogs",
+			Handler:    _GoBack_GetTransactionLogs_Handler,
 		},
 		{
 			MethodName: "CancelTransaction",

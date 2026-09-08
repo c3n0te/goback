@@ -40,7 +40,7 @@ func ReadAccountWhereUserId(db *sqlx.DB, userId uuid.UUID) (*api.AccountResponse
 	return accres, nil
 }
 
-func ReadTransactions(db *sqlx.DB, userId uuid.UUID) ([]*api.Transaction, error) {
+func ReadTransactionsWhereUserId(db *sqlx.DB, userId uuid.UUID) ([]*api.Transaction, error) {
 	rows, err := db.Queryx(
 		`SELECT
 			txid,

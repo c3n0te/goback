@@ -5,10 +5,12 @@ import (
 )
 
 type Config struct {
-	GrpcIp   string
-	GrpcPort string
-	HttpIp   string
-	HttpPort string
+	GrpcIp    string
+	GrpcPort  string
+	HttpIp    string
+	HttpPort  string
+	QueueUrl  string
+	QueueName string
 }
 
 func NewConfig() *Config {
@@ -32,11 +34,23 @@ func NewConfig() *Config {
 		port = "8000"
 	}
 
+	queueUrl := os.Getenv("QUEUE_URL")
+	if queueUrl == "" {
+		queueUrl = "amqp://guest:guest@rmq:5672/"
+	}
+
+	queueName := os.Getenv("QUEUE_NAME")
+	if queueName == "" {
+		queueName = "transactions"
+	}
+
 	cfg := Config{
-		GrpcIp:   grpcAddr,
-		GrpcPort: grpcPort,
-		HttpIp:   addr,
-		HttpPort: port,
+		GrpcIp:    grpcAddr,
+		GrpcPort:  grpcPort,
+		HttpIp:    addr,
+		HttpPort:  port,
+		QueueUrl:  queueUrl,
+		QueueName: queueName,
 	}
 
 	return &cfg

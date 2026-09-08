@@ -66,10 +66,11 @@ func NewCacheWithRetry(cfg *Config) *redis.Client {
 	return rdb
 }
 
-func NewQueueWithRetry(cfg *Config) (*rmq.AmqpConnection, *rmq.Environment) {
+func NewQueueWithRetry(cfg *Config) (*rmq.AmqpConnection, *rmq.Environment, *rmq.Consumer) {
 	ctx := context.Background()
 	env := rmq.NewEnvironment(cfg.QueueUrl, nil)
 	var conn *rmq.AmqpConnection
+	var consumer *rmq.Consumer
 	var err error
 
 	for range 5 {
@@ -84,13 +85,27 @@ func NewQueueWithRetry(cfg *Config) (*rmq.AmqpConnection, *rmq.Environment) {
 		break
 	}
 
-	if conn == nil || env == nil {
+	_, err = conn.Management().DeclareQueue(ctx, &rmq.QuorumQueueSpecification{
+		Name: cfg.QueueName,
+	})
+
+	if err != nil {
+		slog.Error("Failed to declare a queue: ", "error", err)
+
+	}
+
+	consumer, err = conn.NewConsumer(ctx, cfg.QueueName, nil)
+	if err != nil {
+		slog.Error("Failed to create queue consumer: ", "error", err)
+	}
+
+	if conn == nil || env == nil || consumer == nil {
 		slog.Error("Failed to connect to Queue")
 		os.Exit(1)
 	}
 
 	slog.Info("Queue ready")
-	return conn, env
+	return conn, env, consumer
 }
 
 func NewQuoteConnWithRetry(cfg *Config) net.Conn {
@@ -130,16 +145,18 @@ func main() {
 	cache := NewCacheWithRetry(cfg)
 	defer cache.Close()
 
-	queue, env := NewQueueWithRetry(cfg)
+	_, env, qconsumer := NewQueueWithRetry(cfg)
 	defer func() {
 		_ = env.CloseConnections(context.Background())
+		_ = qconsumer.Close(context.Background())
 	}()
 
 	quoteConn := NewQuoteConnWithRetry(cfg)
 	defer quoteConn.Close()
 
 	srv := grpc.NewServer()
-	goback := NewGoBackServer(db, cache, queue, quoteConn)
+	goback := NewGoBackServer(db, cache, qconsumer, quoteConn)
+	go goback.ConsumeQueue()
 	api.RegisterGoBackServer(srv, &goback)
 	grpcAddr := fmt.Sprintf("%v:%v", cfg.GrpcIp, cfg.GrpcPort)
 	listener, err := net.Listen("tcp", grpcAddr)

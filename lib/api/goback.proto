@@ -6,11 +6,11 @@ service GoBack {
     rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse) {};
     rpc GetAccount(AccountRequest) returns (AccountResponse) {};
     rpc GetQuote(QuoteRequest) returns (QuoteResponse) {};
-    rpc BuyShares(BuyRequest) returns (BuyResponse) {};
-    rpc SellShares(SellRequest) returns (SellResponse) {};
-    rpc AutomatedBuy(AutoBuyRequest) returns (AutoBuyResponse) {};
-    rpc AutomatedSell(AutoSellRequest) returns (AutoSellResponse) {};
-    rpc GetTransactions(TransactionRequest) returns (TransactionResponse) {};
+    rpc BuyShares(TxRequest) returns (TxResponse) {};
+    rpc SellShares(TxRequest) returns (TxResponse) {};
+    rpc AutomatedBuy(TxRequest) returns (TxResponse) {};
+    rpc AutomatedSell(TxRequest) returns (TxResponse) {};
+    rpc GetTransactionLogs(TransactionLogRequest) returns (TransactionLogResponse) {};
     rpc CancelTransaction(CancelTxRequest) returns (CancelTxResponse) {};
     rpc CommitTransaction(CommitTxRequest) returns (CommitTxResponse) {};
 }
@@ -42,18 +42,23 @@ message QuoteResponse {
     string Stock = 1;
     string Price = 2;
 }
-message BuyRequest {}
-message BuyResponse {}
-message SellRequest {}
-message SellResponse {}
-message AutoBuyRequest {}
-message AutoBuyResponse {}
-message AutoSellRequest {}
-message AutoSellResponse {}
-message TransactionRequest {
+message TxRequest {
+    string Type = 1;
+    string UserId = 2;
+    string Stock = 3;
+    float  Shares = 4;
+}
+message TxResponse {
+    bool Status = 1;
+    string Type = 2;
+    string Timestamp = 3;
+    string Stock = 4;
+    float Shares = 5;
+}
+message TransactionLogRequest {
     string UserId = 1;
 }
-message TransactionResponse {
+message TransactionLogResponse {
     string UserId = 1;
     repeated Transaction Transactions = 2;
 }
