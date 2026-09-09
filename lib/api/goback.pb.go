@@ -745,9 +745,10 @@ type Transaction struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TxId          string                 `protobuf:"bytes,1,opt,name=TxId,proto3" json:"TxId,omitempty"`
 	UserId        string                 `protobuf:"bytes,2,opt,name=UserId,proto3" json:"UserId,omitempty"`
-	Timestamp     string                 `protobuf:"bytes,3,opt,name=Timestamp,proto3" json:"Timestamp,omitempty"`
-	Stock         string                 `protobuf:"bytes,4,opt,name=Stock,proto3" json:"Stock,omitempty"`
-	Shares        float32                `protobuf:"fixed32,5,opt,name=Shares,proto3" json:"Shares,omitempty"`
+	Type          string                 `protobuf:"bytes,3,opt,name=Type,proto3" json:"Type,omitempty"`
+	Timestamp     string                 `protobuf:"bytes,4,opt,name=Timestamp,proto3" json:"Timestamp,omitempty"`
+	Stock         string                 `protobuf:"bytes,5,opt,name=Stock,proto3" json:"Stock,omitempty"`
+	Shares        float32                `protobuf:"fixed32,6,opt,name=Shares,proto3" json:"Shares,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -792,6 +793,13 @@ func (x *Transaction) GetTxId() string {
 func (x *Transaction) GetUserId() string {
 	if x != nil {
 		return x.UserId
+	}
+	return ""
+}
+
+func (x *Transaction) GetType() string {
+	if x != nil {
+		return x.Type
 	}
 	return ""
 }
@@ -863,23 +871,19 @@ const file_lib_api_goback_proto_rawDesc = "" +
 	"\x0fCancelTxRequest\"\x12\n" +
 	"\x10CancelTxResponse\"\x11\n" +
 	"\x0fCommitTxRequest\"\x12\n" +
-	"\x10CommitTxResponse\"\x85\x01\n" +
+	"\x10CommitTxResponse\"\x99\x01\n" +
 	"\vTransaction\x12\x12\n" +
 	"\x04TxId\x18\x01 \x01(\tR\x04TxId\x12\x16\n" +
-	"\x06UserId\x18\x02 \x01(\tR\x06UserId\x12\x1c\n" +
-	"\tTimestamp\x18\x03 \x01(\tR\tTimestamp\x12\x14\n" +
-	"\x05Stock\x18\x04 \x01(\tR\x05Stock\x12\x16\n" +
-	"\x06Shares\x18\x05 \x01(\x02R\x06Shares2\xe3\x04\n" +
+	"\x06UserId\x18\x02 \x01(\tR\x06UserId\x12\x12\n" +
+	"\x04Type\x18\x03 \x01(\tR\x04Type\x12\x1c\n" +
+	"\tTimestamp\x18\x04 \x01(\tR\tTimestamp\x12\x14\n" +
+	"\x05Stock\x18\x05 \x01(\tR\x05Stock\x12\x16\n" +
+	"\x06Shares\x18\x06 \x01(\x02R\x06Shares2\x9b\x03\n" +
 	"\x06GoBack\x12H\n" +
 	"\rCreateAccount\x12\x19.api.CreateAccountRequest\x1a\x1a.api.CreateAccountResponse\"\x00\x129\n" +
 	"\n" +
 	"GetAccount\x12\x13.api.AccountRequest\x1a\x14.api.AccountResponse\"\x00\x123\n" +
-	"\bGetQuote\x12\x11.api.QuoteRequest\x1a\x12.api.QuoteResponse\"\x00\x12.\n" +
-	"\tBuyShares\x12\x0e.api.TxRequest\x1a\x0f.api.TxResponse\"\x00\x12/\n" +
-	"\n" +
-	"SellShares\x12\x0e.api.TxRequest\x1a\x0f.api.TxResponse\"\x00\x121\n" +
-	"\fAutomatedBuy\x12\x0e.api.TxRequest\x1a\x0f.api.TxResponse\"\x00\x122\n" +
-	"\rAutomatedSell\x12\x0e.api.TxRequest\x1a\x0f.api.TxResponse\"\x00\x12O\n" +
+	"\bGetQuote\x12\x11.api.QuoteRequest\x1a\x12.api.QuoteResponse\"\x00\x12O\n" +
 	"\x12GetTransactionLogs\x12\x1a.api.TransactionLogRequest\x1a\x1b.api.TransactionLogResponse\"\x00\x12B\n" +
 	"\x11CancelTransaction\x12\x14.api.CancelTxRequest\x1a\x15.api.CancelTxResponse\"\x00\x12B\n" +
 	"\x11CommitTransaction\x12\x14.api.CommitTxRequest\x1a\x15.api.CommitTxResponse\"\x00B\aZ\x05./apib\x06proto3"
@@ -919,25 +923,17 @@ var file_lib_api_goback_proto_depIdxs = []int32{
 	0,  // 1: api.GoBack.CreateAccount:input_type -> api.CreateAccountRequest
 	2,  // 2: api.GoBack.GetAccount:input_type -> api.AccountRequest
 	4,  // 3: api.GoBack.GetQuote:input_type -> api.QuoteRequest
-	6,  // 4: api.GoBack.BuyShares:input_type -> api.TxRequest
-	6,  // 5: api.GoBack.SellShares:input_type -> api.TxRequest
-	6,  // 6: api.GoBack.AutomatedBuy:input_type -> api.TxRequest
-	6,  // 7: api.GoBack.AutomatedSell:input_type -> api.TxRequest
-	8,  // 8: api.GoBack.GetTransactionLogs:input_type -> api.TransactionLogRequest
-	10, // 9: api.GoBack.CancelTransaction:input_type -> api.CancelTxRequest
-	12, // 10: api.GoBack.CommitTransaction:input_type -> api.CommitTxRequest
-	1,  // 11: api.GoBack.CreateAccount:output_type -> api.CreateAccountResponse
-	3,  // 12: api.GoBack.GetAccount:output_type -> api.AccountResponse
-	5,  // 13: api.GoBack.GetQuote:output_type -> api.QuoteResponse
-	7,  // 14: api.GoBack.BuyShares:output_type -> api.TxResponse
-	7,  // 15: api.GoBack.SellShares:output_type -> api.TxResponse
-	7,  // 16: api.GoBack.AutomatedBuy:output_type -> api.TxResponse
-	7,  // 17: api.GoBack.AutomatedSell:output_type -> api.TxResponse
-	9,  // 18: api.GoBack.GetTransactionLogs:output_type -> api.TransactionLogResponse
-	11, // 19: api.GoBack.CancelTransaction:output_type -> api.CancelTxResponse
-	13, // 20: api.GoBack.CommitTransaction:output_type -> api.CommitTxResponse
-	11, // [11:21] is the sub-list for method output_type
-	1,  // [1:11] is the sub-list for method input_type
+	8,  // 4: api.GoBack.GetTransactionLogs:input_type -> api.TransactionLogRequest
+	10, // 5: api.GoBack.CancelTransaction:input_type -> api.CancelTxRequest
+	12, // 6: api.GoBack.CommitTransaction:input_type -> api.CommitTxRequest
+	1,  // 7: api.GoBack.CreateAccount:output_type -> api.CreateAccountResponse
+	3,  // 8: api.GoBack.GetAccount:output_type -> api.AccountResponse
+	5,  // 9: api.GoBack.GetQuote:output_type -> api.QuoteResponse
+	9,  // 10: api.GoBack.GetTransactionLogs:output_type -> api.TransactionLogResponse
+	11, // 11: api.GoBack.CancelTransaction:output_type -> api.CancelTxResponse
+	13, // 12: api.GoBack.CommitTransaction:output_type -> api.CommitTxResponse
+	7,  // [7:13] is the sub-list for method output_type
+	1,  // [1:7] is the sub-list for method input_type
 	1,  // [1:1] is the sub-list for extension type_name
 	1,  // [1:1] is the sub-list for extension extendee
 	0,  // [0:1] is the sub-list for field type_name

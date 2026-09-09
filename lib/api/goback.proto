@@ -65,7 +65,8 @@ message CommitTxResponse {}
 message Transaction {
     string TxId = 1;
     string UserId = 2;
-    string Timestamp = 3;
-    string Stock = 4;
-    float  Shares = 5;
+    string Type = 3;
+    string Timestamp = 4;
+    string Stock = 5;
+    float  Shares = 6;
 }
