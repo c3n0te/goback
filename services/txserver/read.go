@@ -3,6 +3,7 @@ package main
 import (
 	"api"
 	"log/slog"
+	"time"
 	"uuid"
 
 	"github.com/jmoiron/sqlx"
@@ -82,7 +83,7 @@ func ReadTransactionsWhereUserId(db *sqlx.DB, userId uuid.UUID) ([]*api.Transact
 			TxId:      tx.TxId.String(),
 			UserId:    tx.UserId.String(),
 			Type:      tx.Type,
-			Timestamp: tx.Timestamp.String(),
+			Timestamp: tx.Timestamp.Format(time.RFC3339),
 			Stock:     tx.Stock,
 			Shares:    tx.Shares,
 		}

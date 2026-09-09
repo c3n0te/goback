@@ -178,7 +178,7 @@ func (srv *GoBackServer) GetTransactionLogs(ctx context.Context, req *api.Transa
 	}
 
 	txres := &api.TransactionLogResponse{
-		UserId:          userId.String(),
+		UserId:          req.UserId,
 		TransactionLogs: txLogs,
 	}
 
