@@ -45,6 +45,7 @@ func ReadTransactionsWhereUserId(db *sqlx.DB, userId uuid.UUID) ([]*api.Transact
 		`SELECT
 			txid,
 			userid,
+			type,
 			timestamp,
 			stock,
 			shares
