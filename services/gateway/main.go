@@ -44,7 +44,12 @@ func NewQueueWithRetry(cfg *Config) (*rmq.AmqpConnection, *rmq.Environment, *rmq
 		os.Exit(1)
 	}
 
-	publisher, err = conn.NewPublisher(ctx, &rmq.QueueAddress{Queue: cfg.QueueName}, nil)
+	publisher, err = conn.NewPublisher(
+		ctx,
+		&rmq.QueueAddress{Queue: cfg.QueueName},
+		&rmq.PublisherOptions{MaxInFlight: 1000},
+	)
+
 	if err != nil {
 		slog.Error("Failed to create queue publisher: ", "error", err)
 		os.Exit(1)
@@ -162,6 +167,24 @@ func main() {
 		json.NewEncoder(w).Encode(buyRes)
 	})
 
+	mux.HandleFunc("POST /buy/auto", func(w http.ResponseWriter, r *http.Request) {
+		var newAutoBuy api.TxRequest
+		if err := json.NewDecoder(r.Body).Decode(&newAutoBuy); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		autoBuyRes, err := CallQueuePublish(qpublisher, &newAutoBuy)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(autoBuyRes)
+	})
+
 	mux.HandleFunc("POST /sell", func(w http.ResponseWriter, r *http.Request) {
 		var newSell api.TxRequest
 		if err := json.NewDecoder(r.Body).Decode(&newSell); err != nil {
@@ -178,6 +201,24 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(sellRes)
+	})
+
+	mux.HandleFunc("POST /sell/auto", func(w http.ResponseWriter, r *http.Request) {
+		var newAutoSell api.TxRequest
+		if err := json.NewDecoder(r.Body).Decode(&newAutoSell); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		autoSellRes, err := CallQueuePublish(qpublisher, &newAutoSell)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(autoSellRes)
 	})
 
 	mux.HandleFunc("GET /transactions/{userid}", func(w http.ResponseWriter, r *http.Request) {

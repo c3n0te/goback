@@ -19,6 +19,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	rmq "github.com/rabbitmq/rabbitmq-amqp-go-client/pkg/rabbitmqamqp"
 	"github.com/redis/go-redis/v9"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type GoBackServer struct {
@@ -107,10 +109,18 @@ func (srv *GoBackServer) CreateAccount(ctx context.Context, req *api.CreateAccou
 
 func (srv *GoBackServer) GetAccount(ctx context.Context, req *api.AccountRequest) (*api.AccountResponse, error) {
 	slog.Info("Retrieving Account Information")
-	userId, err := uuid.Parse(req.UserId)
+	if req.UserId == "" {
+		return nil, status.Error(codes.InvalidArgument, "UserId is required")
+	}
+
+	id := strings.TrimSpace(req.UserId)
+	id = strings.ReplaceAll(id, "\x00", "")
+
+	userId, err := uuid.Parse(id)
 	if err != nil {
-		slog.Error("Failed to parse Transaction UserId", "error", err)
-		return nil, err
+		slog.Error("Failed to parse AccountRequest UserId", "error", err)
+		slog.Error(fmt.Sprintf("Failed UserId: %v", req.UserId))
+		return nil, status.Errorf(codes.InvalidArgument, "Invalid ID format: %v", err)
 	}
 
 	accres, err := ReadAccountWhereUserId(srv.DB, userId)
@@ -165,10 +175,18 @@ func (srv *GoBackServer) GetQuote(ctx context.Context, req *api.QuoteRequest) (*
 
 func (srv *GoBackServer) GetTransactionLogs(ctx context.Context, req *api.TransactionLogRequest) (*api.TransactionLogResponse, error) {
 	slog.Info("Retrieving Transaction Logs")
-	userId, err := uuid.Parse(req.UserId)
+	if req.UserId == "" {
+		return nil, status.Error(codes.InvalidArgument, "UserId is required")
+	}
+
+	id := strings.TrimSpace(req.UserId)
+	id = strings.ReplaceAll(id, "\x00", "")
+
+	userId, err := uuid.Parse(id)
 	if err != nil {
 		slog.Error("Failed to parse Transaction UserId", "error", err)
-		return nil, err
+		slog.Error(fmt.Sprintf("Failed UserId: %v", req.UserId))
+		return nil, status.Errorf(codes.InvalidArgument, "Invalid ID format: %v", err)
 	}
 
 	txLogs, err := ReadTransactionsWhereUserId(srv.DB, userId)
@@ -178,7 +196,7 @@ func (srv *GoBackServer) GetTransactionLogs(ctx context.Context, req *api.Transa
 	}
 
 	txres := &api.TransactionLogResponse{
-		UserId:          req.UserId,
+		UserId:          userId.String(),
 		TransactionLogs: txLogs,
 	}
 

@@ -22,36 +22,78 @@ func CallQueuePublish(qpublisher *rmq.Publisher, newTxReq *api.TxRequest) (*api.
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
+	ch := make(chan *api.TxResponse)
 
-	resp, err := qpublisher.Publish(ctx, rmq.NewMessage([]byte(body)))
-	switch resp.Outcome.(type) {
-	case *rmq.StateAccepted:
-		buyResp := &api.TxResponse{
-			Status:    true,
-			Type:      newTxReq.Type,
-			Timestamp: time.Now().UTC().Format(time.RFC3339),
-			Stock:     newTxReq.Stock,
-			Shares:    newTxReq.Shares,
+	err = qpublisher.PublishAsync(ctx, rmq.NewMessage([]byte(body)), func(resp *rmq.PublishResult, err error) {
+		switch resp.Outcome.(type) {
+		case *rmq.StateAccepted:
+			buyResp := &api.TxResponse{
+				Status:    true,
+				Type:      newTxReq.Type,
+				Timestamp: time.Now().UTC().Format(time.RFC3339),
+				Stock:     newTxReq.Stock,
+				Shares:    newTxReq.Shares,
+			}
+
+			ch <- buyResp
+
+		case *rmq.StateRejected:
+			slog.Error(fmt.Sprintf("Message was rejected: %v", resp.Outcome))
+			buyResp := &api.TxResponse{
+				Status:    false,
+				Type:      newTxReq.Type,
+				Timestamp: time.Now().UTC().Format(time.RFC3339),
+				Stock:     newTxReq.Stock,
+				Shares:    newTxReq.Shares,
+			}
+
+			ch <- buyResp
+
+		case *rmq.StateReleased:
+			slog.Error(fmt.Sprintf("Message was released: %v", resp.Outcome))
+			buyResp := &api.TxResponse{
+				Status:    false,
+				Type:      newTxReq.Type,
+				Timestamp: time.Now().UTC().Format(time.RFC3339),
+				Stock:     newTxReq.Stock,
+				Shares:    newTxReq.Shares,
+			}
+
+			ch <- buyResp
+
+		case *rmq.StateModified:
+			slog.Error(fmt.Sprintf("Message was modified: %v", resp.Outcome))
+			buyResp := &api.TxResponse{
+				Status:    false,
+				Type:      newTxReq.Type,
+				Timestamp: time.Now().UTC().Format(time.RFC3339),
+				Stock:     newTxReq.Stock,
+				Shares:    newTxReq.Shares,
+			}
+
+			ch <- buyResp
+
+		default:
+			slog.Error(fmt.Sprintf("Unexpected publish outcome: %v", resp.Outcome))
+			buyResp := &api.TxResponse{
+				Status:    false,
+				Type:      newTxReq.Type,
+				Timestamp: time.Now().UTC().Format(time.RFC3339),
+				Stock:     newTxReq.Stock,
+				Shares:    newTxReq.Shares,
+			}
+
+			ch <- buyResp
 		}
+	})
 
-		return buyResp, nil
-
-	case *rmq.StateRejected:
-		slog.Error(fmt.Sprintf("Message was rejected: %v", resp.Outcome))
-		return nil, err
-
-	case *rmq.StateReleased:
-		slog.Error(fmt.Sprintf("Message was released: %v", resp.Outcome))
-		return nil, err
-
-	case *rmq.StateModified:
-		slog.Error(fmt.Sprintf("Message was modified: %v", resp.Outcome))
-		return nil, err
-
-	default:
-		slog.Error(fmt.Sprintf("Unexpected publish outcome: %v", resp.Outcome))
+	if err != nil {
+		slog.Error("Failed to receive async publish response: ", "error", err)
 		return nil, err
 	}
+
+	buyResp := <-ch
+	return buyResp, nil
 }
 
 func CallCreateAccount(gbc api.GoBackClient, newAccount *api.CreateAccountRequest) (*api.CreateAccountResponse, error) {
