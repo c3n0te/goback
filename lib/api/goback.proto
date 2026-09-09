@@ -56,13 +56,13 @@ message TransactionLogRequest {
 }
 message TransactionLogResponse {
     string UserId = 1;
-    repeated Transaction Transactions = 2;
+    repeated TransactionLog TransactionLogs = 2;
 }
 message CancelTxRequest {}
 message CancelTxResponse {}
 message CommitTxRequest {}
 message CommitTxResponse {}
-message Transaction {
+message TransactionLog {
     string TxId = 1;
     string UserId = 2;
     string Type = 3;

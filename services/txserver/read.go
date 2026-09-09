@@ -28,19 +28,27 @@ func ReadAccountWhereUserId(db *sqlx.DB, userId uuid.UUID) (*api.AccountResponse
 	}
 	defer rows.Close()
 
-	accres := &api.AccountResponse{}
+	acc := api.Account{}
 	for rows.Next() {
-		err = rows.StructScan(&accres)
+		err = rows.StructScan(&acc)
 		if err != nil {
 			slog.Error("Failed to marshal db rows into AccountResponse struct: ", "error", err)
 			return nil, err
 		}
 	}
 
+	accres := &api.AccountResponse{
+		UserId:   acc.UserId.String(),
+		Username: acc.Username,
+		Email:    acc.Email,
+		Password: acc.Password,
+		Balance:  acc.Balance,
+	}
+
 	return accres, nil
 }
 
-func ReadTransactionsWhereUserId(db *sqlx.DB, userId uuid.UUID) ([]*api.Transaction, error) {
+func ReadTransactionsWhereUserId(db *sqlx.DB, userId uuid.UUID) ([]*api.TransactionLog, error) {
 	rows, err := db.Queryx(
 		`SELECT
 			txid,
@@ -60,27 +68,27 @@ func ReadTransactionsWhereUserId(db *sqlx.DB, userId uuid.UUID) ([]*api.Transact
 	}
 	defer rows.Close()
 
-	txs := []*api.Transaction{}
+	txLogs := []*api.TransactionLog{}
 
 	for rows.Next() {
-		dbtx := api.DbTransaction{}
-		err = rows.StructScan(&dbtx)
+		tx := api.Transaction{}
+		err = rows.StructScan(&tx)
 		if err != nil {
-			slog.Error("Failed to marshal db rows into DbTransaction struct: ", "error", err)
+			slog.Error("Failed to marshal db rows into Transaction struct: ", "error", err)
 			return nil, err
 		}
 
-		tx := api.Transaction{
-			TxId:      dbtx.TxId.String(),
-			UserId:    dbtx.UserId.String(),
-			Type:      dbtx.Type,
-			Timestamp: dbtx.Timestamp.String(),
-			Stock:     dbtx.Stock,
-			Shares:    dbtx.Shares,
+		txLog := api.TransactionLog{
+			TxId:      tx.TxId.String(),
+			UserId:    tx.UserId.String(),
+			Type:      tx.Type,
+			Timestamp: tx.Timestamp.String(),
+			Stock:     tx.Stock,
+			Shares:    tx.Shares,
 		}
 
-		txs = append(txs, &tx)
+		txLogs = append(txLogs, &txLog)
 	}
 
-	return txs, nil
+	return txLogs, nil
 }

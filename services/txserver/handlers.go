@@ -81,7 +81,7 @@ func (srv *GoBackServer) ConsumeQueue() {
 		delivery, err := srv.Queue.Receive(ctx)
 		if err != nil {
 			if errors.Is(err, context.Canceled) {
-				slog.Info("Shutting down gracefully...")
+				slog.Info("Shutting down Queue Consumer gracefully...")
 				return
 			}
 
@@ -178,8 +178,8 @@ func (srv *GoBackServer) GetTransactionLogs(ctx context.Context, req *api.Transa
 	}
 
 	txres := &api.TransactionLogResponse{
-		UserId:       userId.String(),
-		Transactions: txLogs,
+		UserId:          userId.String(),
+		TransactionLogs: txLogs,
 	}
 
 	return txres, nil

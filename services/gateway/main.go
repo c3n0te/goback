@@ -41,12 +41,13 @@ func NewQueueWithRetry(cfg *Config) (*rmq.AmqpConnection, *rmq.Environment, *rmq
 
 	if err != nil {
 		slog.Error("Failed to declare a queue: ", "error", err)
-
+		os.Exit(1)
 	}
 
 	publisher, err = conn.NewPublisher(ctx, &rmq.QueueAddress{Queue: cfg.QueueName}, nil)
 	if err != nil {
 		slog.Error("Failed to create queue publisher: ", "error", err)
+		os.Exit(1)
 	}
 
 	if conn == nil || env == nil || publisher == nil {
