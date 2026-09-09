@@ -17,6 +17,7 @@ func Migrate(db *sqlx.DB) {
     CREATE TABLE IF NOT EXISTS Transactions (
     	txid			TEXT UNIQUE PRIMARY KEY,
      	userid			TEXT,
+      	type			TEXT,
         timestamp		TIMESTAMP,
     	stock			TEXT,
      	shares			DECIMAL

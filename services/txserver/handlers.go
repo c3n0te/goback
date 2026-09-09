@@ -40,6 +40,39 @@ func NewGoBackServer(db *sqlx.DB, cache *redis.Client, queue *rmq.Consumer, quot
 	return goback
 }
 
+func (srv *GoBackServer) HandleQueueMessage(ctx context.Context, delivery rmq.IDeliveryContext) {
+	msg := delivery.Message()
+	rawBytes := msg.Data[0]
+	var newTxRequest api.TxRequest
+	if err := json.Unmarshal(rawBytes, &newTxRequest); err != nil {
+		slog.Error("Failed to unmarshal queue message into TxRequest: ", "error", err)
+		return
+	} else {
+		delivery.Accept(ctx)
+		slog.Info(fmt.Sprintf("TxRequest: %v", &newTxRequest))
+	}
+
+	transactionType := strings.ToUpper(newTxRequest.Type)
+	switch transactionType {
+	case "BUY":
+		slog.Info("Buy Request")
+	case "SELL":
+		slog.Info("Sell Request")
+	case "AUTOBUY":
+		slog.Info("AutoBuy Request")
+	case "AUTOSELL":
+		slog.Info("AutoSell Request")
+	default:
+		slog.Error(fmt.Sprintf("Failed to match transaction type of TxRequest. Type: %v", transactionType))
+		return
+	}
+
+	if err := InsertTransaction(srv.DB, &newTxRequest); err != nil {
+		slog.Error("Failed to insert transaction: ", "error", err)
+		return
+	}
+}
+
 func (srv *GoBackServer) ConsumeQueue() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
@@ -56,16 +89,7 @@ func (srv *GoBackServer) ConsumeQueue() {
 			continue
 		}
 
-		msg := delivery.Message()
-		rawBytes := msg.Data[0]
-		var newTxRequest api.TxRequest
-		if err := json.Unmarshal(rawBytes, &newTxRequest); err != nil {
-			slog.Error("Failed to unmarshal queue message into TxRequest: ", "error", err)
-		} else {
-			delivery.Accept(ctx)
-			slog.Info(fmt.Sprintf("TxRequest: %v", &newTxRequest))
-		}
-
+		go srv.HandleQueueMessage(ctx, delivery)
 	}
 }
 

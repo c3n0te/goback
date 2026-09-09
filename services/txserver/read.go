@@ -59,10 +59,10 @@ func ReadTransactionsWhereUserId(db *sqlx.DB, userId uuid.UUID) ([]*api.Transact
 	}
 	defer rows.Close()
 
-	tx := api.Transaction{}
 	txs := []*api.Transaction{}
 
 	for rows.Next() {
+		tx := api.Transaction{}
 		err = rows.StructScan(&tx)
 		if err != nil {
 			slog.Error("Failed to marshal db rows into Transaction struct: ", "error", err)

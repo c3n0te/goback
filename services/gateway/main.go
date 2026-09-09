@@ -150,7 +150,7 @@ func main() {
 			return
 		}
 
-		buyRes, err := CallQueuePublishBuy(qpublisher, &newBuy)
+		buyRes, err := CallQueuePublish(qpublisher, &newBuy)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
@@ -168,7 +168,7 @@ func main() {
 			return
 		}
 
-		sellRes, err := CallQueuePublishSell(qpublisher, &newSell)
+		sellRes, err := CallQueuePublish(qpublisher, &newSell)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return

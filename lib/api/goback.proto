@@ -6,10 +6,6 @@ service GoBack {
     rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse) {};
     rpc GetAccount(AccountRequest) returns (AccountResponse) {};
     rpc GetQuote(QuoteRequest) returns (QuoteResponse) {};
-    rpc BuyShares(TxRequest) returns (TxResponse) {};
-    rpc SellShares(TxRequest) returns (TxResponse) {};
-    rpc AutomatedBuy(TxRequest) returns (TxResponse) {};
-    rpc AutomatedSell(TxRequest) returns (TxResponse) {};
     rpc GetTransactionLogs(TransactionLogRequest) returns (TransactionLogResponse) {};
     rpc CancelTransaction(CancelTxRequest) returns (CancelTxResponse) {};
     rpc CommitTransaction(CommitTxRequest) returns (CommitTxResponse) {};

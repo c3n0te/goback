@@ -12,50 +12,11 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func CallQueuePublishSell(qpublisher *rmq.Publisher, newSellReq *api.TxRequest) (*api.TxResponse, error) {
-	slog.Info("Publishing SellRequest to Message Queue")
-	body, err := json.Marshal(newSellReq)
+func CallQueuePublish(qpublisher *rmq.Publisher, newTxReq *api.TxRequest) (*api.TxResponse, error) {
+	slog.Info("Publishing Tx Request to Message Queue")
+	body, err := json.Marshal(newTxReq)
 	if err != nil {
-		slog.Error("Failed to marshal BuyRequest", "error", err)
-		return nil, err
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	resp, err := qpublisher.Publish(ctx, rmq.NewMessage([]byte(body)))
-	switch resp.Outcome.(type) {
-	case *rmq.StateAccepted:
-		sellResp := &api.TxResponse{
-			Status:    true,
-			Timestamp: time.Now().UTC().Format(time.RFC3339),
-		}
-
-		return sellResp, nil
-
-	case *rmq.StateRejected:
-		slog.Error(fmt.Sprintf("Message was rejected: %v", resp.Outcome))
-		return nil, err
-
-	case *rmq.StateReleased:
-		slog.Error(fmt.Sprintf("Message was released: %v", resp.Outcome))
-		return nil, err
-
-	case *rmq.StateModified:
-		slog.Error(fmt.Sprintf("Message was modified: %v", resp.Outcome))
-		return nil, err
-
-	default:
-		slog.Error(fmt.Sprintf("Unexpected publish outcome: %v", resp.Outcome))
-		return nil, err
-	}
-}
-
-func CallQueuePublishBuy(qpublisher *rmq.Publisher, newBuyReq *api.TxRequest) (*api.TxResponse, error) {
-	slog.Info("Publishing BuyRequest to Message Queue")
-	body, err := json.Marshal(newBuyReq)
-	if err != nil {
-		slog.Error("Failed to marshal BuyRequest", "error", err)
+		slog.Error("Failed to marshal TxRequest", "error", err)
 		return nil, err
 	}
 
@@ -67,7 +28,10 @@ func CallQueuePublishBuy(qpublisher *rmq.Publisher, newBuyReq *api.TxRequest) (*
 	case *rmq.StateAccepted:
 		buyResp := &api.TxResponse{
 			Status:    true,
+			Type:      newTxReq.Type,
 			Timestamp: time.Now().UTC().Format(time.RFC3339),
+			Stock:     newTxReq.Stock,
+			Shares:    newTxReq.Shares,
 		}
 
 		return buyResp, nil
