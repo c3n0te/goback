@@ -13,7 +13,6 @@ import (
 	_ "github.com/lib/pq"
 	rmq "github.com/rabbitmq/rabbitmq-amqp-go-client/pkg/rabbitmqamqp"
 	"github.com/redis/go-redis/v9"
-
 	"google.golang.org/grpc"
 )
 

@@ -261,6 +261,110 @@ func (x *AccountResponse) GetBalance() float32 {
 	return 0
 }
 
+type BalanceRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	AddAmount     float32                `protobuf:"fixed32,2,opt,name=AddAmount,proto3" json:"AddAmount,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BalanceRequest) Reset() {
+	*x = BalanceRequest{}
+	mi := &file_lib_api_goback_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BalanceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BalanceRequest) ProtoMessage() {}
+
+func (x *BalanceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BalanceRequest.ProtoReflect.Descriptor instead.
+func (*BalanceRequest) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *BalanceRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *BalanceRequest) GetAddAmount() float32 {
+	if x != nil {
+		return x.AddAmount
+	}
+	return 0
+}
+
+type BalanceResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        bool                   `protobuf:"varint,1,opt,name=Status,proto3" json:"Status,omitempty"`
+	NewBalance    float32                `protobuf:"fixed32,2,opt,name=NewBalance,proto3" json:"NewBalance,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BalanceResponse) Reset() {
+	*x = BalanceResponse{}
+	mi := &file_lib_api_goback_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BalanceResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BalanceResponse) ProtoMessage() {}
+
+func (x *BalanceResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_lib_api_goback_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BalanceResponse.ProtoReflect.Descriptor instead.
+func (*BalanceResponse) Descriptor() ([]byte, []int) {
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *BalanceResponse) GetStatus() bool {
+	if x != nil {
+		return x.Status
+	}
+	return false
+}
+
+func (x *BalanceResponse) GetNewBalance() float32 {
+	if x != nil {
+		return x.NewBalance
+	}
+	return 0
+}
+
 type QuoteRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Stock         string                 `protobuf:"bytes,1,opt,name=Stock,proto3" json:"Stock,omitempty"`
@@ -270,7 +374,7 @@ type QuoteRequest struct {
 
 func (x *QuoteRequest) Reset() {
 	*x = QuoteRequest{}
-	mi := &file_lib_api_goback_proto_msgTypes[4]
+	mi := &file_lib_api_goback_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -282,7 +386,7 @@ func (x *QuoteRequest) String() string {
 func (*QuoteRequest) ProtoMessage() {}
 
 func (x *QuoteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lib_api_goback_proto_msgTypes[4]
+	mi := &file_lib_api_goback_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -295,7 +399,7 @@ func (x *QuoteRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QuoteRequest.ProtoReflect.Descriptor instead.
 func (*QuoteRequest) Descriptor() ([]byte, []int) {
-	return file_lib_api_goback_proto_rawDescGZIP(), []int{4}
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *QuoteRequest) GetStock() string {
@@ -315,7 +419,7 @@ type QuoteResponse struct {
 
 func (x *QuoteResponse) Reset() {
 	*x = QuoteResponse{}
-	mi := &file_lib_api_goback_proto_msgTypes[5]
+	mi := &file_lib_api_goback_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -327,7 +431,7 @@ func (x *QuoteResponse) String() string {
 func (*QuoteResponse) ProtoMessage() {}
 
 func (x *QuoteResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lib_api_goback_proto_msgTypes[5]
+	mi := &file_lib_api_goback_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -340,7 +444,7 @@ func (x *QuoteResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QuoteResponse.ProtoReflect.Descriptor instead.
 func (*QuoteResponse) Descriptor() ([]byte, []int) {
-	return file_lib_api_goback_proto_rawDescGZIP(), []int{5}
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *QuoteResponse) GetStock() string {
@@ -369,7 +473,7 @@ type TxRequest struct {
 
 func (x *TxRequest) Reset() {
 	*x = TxRequest{}
-	mi := &file_lib_api_goback_proto_msgTypes[6]
+	mi := &file_lib_api_goback_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -381,7 +485,7 @@ func (x *TxRequest) String() string {
 func (*TxRequest) ProtoMessage() {}
 
 func (x *TxRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lib_api_goback_proto_msgTypes[6]
+	mi := &file_lib_api_goback_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -394,7 +498,7 @@ func (x *TxRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TxRequest.ProtoReflect.Descriptor instead.
 func (*TxRequest) Descriptor() ([]byte, []int) {
-	return file_lib_api_goback_proto_rawDescGZIP(), []int{6}
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *TxRequest) GetType() string {
@@ -438,7 +542,7 @@ type TxResponse struct {
 
 func (x *TxResponse) Reset() {
 	*x = TxResponse{}
-	mi := &file_lib_api_goback_proto_msgTypes[7]
+	mi := &file_lib_api_goback_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -450,7 +554,7 @@ func (x *TxResponse) String() string {
 func (*TxResponse) ProtoMessage() {}
 
 func (x *TxResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lib_api_goback_proto_msgTypes[7]
+	mi := &file_lib_api_goback_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -463,7 +567,7 @@ func (x *TxResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TxResponse.ProtoReflect.Descriptor instead.
 func (*TxResponse) Descriptor() ([]byte, []int) {
-	return file_lib_api_goback_proto_rawDescGZIP(), []int{7}
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *TxResponse) GetStatus() bool {
@@ -510,7 +614,7 @@ type TransactionLogRequest struct {
 
 func (x *TransactionLogRequest) Reset() {
 	*x = TransactionLogRequest{}
-	mi := &file_lib_api_goback_proto_msgTypes[8]
+	mi := &file_lib_api_goback_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -522,7 +626,7 @@ func (x *TransactionLogRequest) String() string {
 func (*TransactionLogRequest) ProtoMessage() {}
 
 func (x *TransactionLogRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lib_api_goback_proto_msgTypes[8]
+	mi := &file_lib_api_goback_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -535,7 +639,7 @@ func (x *TransactionLogRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransactionLogRequest.ProtoReflect.Descriptor instead.
 func (*TransactionLogRequest) Descriptor() ([]byte, []int) {
-	return file_lib_api_goback_proto_rawDescGZIP(), []int{8}
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *TransactionLogRequest) GetUserId() string {
@@ -555,7 +659,7 @@ type TransactionLogResponse struct {
 
 func (x *TransactionLogResponse) Reset() {
 	*x = TransactionLogResponse{}
-	mi := &file_lib_api_goback_proto_msgTypes[9]
+	mi := &file_lib_api_goback_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -567,7 +671,7 @@ func (x *TransactionLogResponse) String() string {
 func (*TransactionLogResponse) ProtoMessage() {}
 
 func (x *TransactionLogResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lib_api_goback_proto_msgTypes[9]
+	mi := &file_lib_api_goback_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -580,7 +684,7 @@ func (x *TransactionLogResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransactionLogResponse.ProtoReflect.Descriptor instead.
 func (*TransactionLogResponse) Descriptor() ([]byte, []int) {
-	return file_lib_api_goback_proto_rawDescGZIP(), []int{9}
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *TransactionLogResponse) GetUserId() string {
@@ -605,7 +709,7 @@ type CancelTxRequest struct {
 
 func (x *CancelTxRequest) Reset() {
 	*x = CancelTxRequest{}
-	mi := &file_lib_api_goback_proto_msgTypes[10]
+	mi := &file_lib_api_goback_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -617,7 +721,7 @@ func (x *CancelTxRequest) String() string {
 func (*CancelTxRequest) ProtoMessage() {}
 
 func (x *CancelTxRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lib_api_goback_proto_msgTypes[10]
+	mi := &file_lib_api_goback_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -630,7 +734,7 @@ func (x *CancelTxRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelTxRequest.ProtoReflect.Descriptor instead.
 func (*CancelTxRequest) Descriptor() ([]byte, []int) {
-	return file_lib_api_goback_proto_rawDescGZIP(), []int{10}
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{12}
 }
 
 type CancelTxResponse struct {
@@ -641,7 +745,7 @@ type CancelTxResponse struct {
 
 func (x *CancelTxResponse) Reset() {
 	*x = CancelTxResponse{}
-	mi := &file_lib_api_goback_proto_msgTypes[11]
+	mi := &file_lib_api_goback_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -653,7 +757,7 @@ func (x *CancelTxResponse) String() string {
 func (*CancelTxResponse) ProtoMessage() {}
 
 func (x *CancelTxResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lib_api_goback_proto_msgTypes[11]
+	mi := &file_lib_api_goback_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -666,7 +770,7 @@ func (x *CancelTxResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelTxResponse.ProtoReflect.Descriptor instead.
 func (*CancelTxResponse) Descriptor() ([]byte, []int) {
-	return file_lib_api_goback_proto_rawDescGZIP(), []int{11}
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{13}
 }
 
 type CommitTxRequest struct {
@@ -677,7 +781,7 @@ type CommitTxRequest struct {
 
 func (x *CommitTxRequest) Reset() {
 	*x = CommitTxRequest{}
-	mi := &file_lib_api_goback_proto_msgTypes[12]
+	mi := &file_lib_api_goback_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -689,7 +793,7 @@ func (x *CommitTxRequest) String() string {
 func (*CommitTxRequest) ProtoMessage() {}
 
 func (x *CommitTxRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lib_api_goback_proto_msgTypes[12]
+	mi := &file_lib_api_goback_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -702,7 +806,7 @@ func (x *CommitTxRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CommitTxRequest.ProtoReflect.Descriptor instead.
 func (*CommitTxRequest) Descriptor() ([]byte, []int) {
-	return file_lib_api_goback_proto_rawDescGZIP(), []int{12}
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{14}
 }
 
 type CommitTxResponse struct {
@@ -713,7 +817,7 @@ type CommitTxResponse struct {
 
 func (x *CommitTxResponse) Reset() {
 	*x = CommitTxResponse{}
-	mi := &file_lib_api_goback_proto_msgTypes[13]
+	mi := &file_lib_api_goback_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -725,7 +829,7 @@ func (x *CommitTxResponse) String() string {
 func (*CommitTxResponse) ProtoMessage() {}
 
 func (x *CommitTxResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lib_api_goback_proto_msgTypes[13]
+	mi := &file_lib_api_goback_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -738,7 +842,7 @@ func (x *CommitTxResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CommitTxResponse.ProtoReflect.Descriptor instead.
 func (*CommitTxResponse) Descriptor() ([]byte, []int) {
-	return file_lib_api_goback_proto_rawDescGZIP(), []int{13}
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{15}
 }
 
 type TransactionLog struct {
@@ -755,7 +859,7 @@ type TransactionLog struct {
 
 func (x *TransactionLog) Reset() {
 	*x = TransactionLog{}
-	mi := &file_lib_api_goback_proto_msgTypes[14]
+	mi := &file_lib_api_goback_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -767,7 +871,7 @@ func (x *TransactionLog) String() string {
 func (*TransactionLog) ProtoMessage() {}
 
 func (x *TransactionLog) ProtoReflect() protoreflect.Message {
-	mi := &file_lib_api_goback_proto_msgTypes[14]
+	mi := &file_lib_api_goback_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -780,7 +884,7 @@ func (x *TransactionLog) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransactionLog.ProtoReflect.Descriptor instead.
 func (*TransactionLog) Descriptor() ([]byte, []int) {
-	return file_lib_api_goback_proto_rawDescGZIP(), []int{14}
+	return file_lib_api_goback_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *TransactionLog) GetTxId() string {
@@ -845,7 +949,15 @@ const file_lib_api_goback_proto_rawDesc = "" +
 	"\bUsername\x18\x02 \x01(\tR\bUsername\x12\x14\n" +
 	"\x05Email\x18\x03 \x01(\tR\x05Email\x12\x1a\n" +
 	"\bPassword\x18\x04 \x01(\tR\bPassword\x12\x18\n" +
-	"\aBalance\x18\x05 \x01(\x02R\aBalance\"$\n" +
+	"\aBalance\x18\x05 \x01(\x02R\aBalance\"F\n" +
+	"\x0eBalanceRequest\x12\x16\n" +
+	"\x06UserId\x18\x01 \x01(\tR\x06UserId\x12\x1c\n" +
+	"\tAddAmount\x18\x02 \x01(\x02R\tAddAmount\"I\n" +
+	"\x0fBalanceResponse\x12\x16\n" +
+	"\x06Status\x18\x01 \x01(\bR\x06Status\x12\x1e\n" +
+	"\n" +
+	"NewBalance\x18\x02 \x01(\x02R\n" +
+	"NewBalance\"$\n" +
 	"\fQuoteRequest\x12\x14\n" +
 	"\x05Stock\x18\x01 \x01(\tR\x05Stock\";\n" +
 	"\rQuoteResponse\x12\x14\n" +
@@ -878,11 +990,13 @@ const file_lib_api_goback_proto_rawDesc = "" +
 	"\x04Type\x18\x03 \x01(\tR\x04Type\x12\x1c\n" +
 	"\tTimestamp\x18\x04 \x01(\tR\tTimestamp\x12\x14\n" +
 	"\x05Stock\x18\x05 \x01(\tR\x05Stock\x12\x16\n" +
-	"\x06Shares\x18\x06 \x01(\x02R\x06Shares2\x9b\x03\n" +
+	"\x06Shares\x18\x06 \x01(\x02R\x06Shares2\xd6\x03\n" +
 	"\x06GoBack\x12H\n" +
 	"\rCreateAccount\x12\x19.api.CreateAccountRequest\x1a\x1a.api.CreateAccountResponse\"\x00\x129\n" +
 	"\n" +
-	"GetAccount\x12\x13.api.AccountRequest\x1a\x14.api.AccountResponse\"\x00\x123\n" +
+	"GetAccount\x12\x13.api.AccountRequest\x1a\x14.api.AccountResponse\"\x00\x129\n" +
+	"\n" +
+	"AddBalance\x12\x13.api.BalanceRequest\x1a\x14.api.BalanceResponse\"\x00\x123\n" +
 	"\bGetQuote\x12\x11.api.QuoteRequest\x1a\x12.api.QuoteResponse\"\x00\x12O\n" +
 	"\x12GetTransactionLogs\x12\x1a.api.TransactionLogRequest\x1a\x1b.api.TransactionLogResponse\"\x00\x12B\n" +
 	"\x11CancelTransaction\x12\x14.api.CancelTxRequest\x1a\x15.api.CancelTxResponse\"\x00\x12B\n" +
@@ -900,40 +1014,44 @@ func file_lib_api_goback_proto_rawDescGZIP() []byte {
 	return file_lib_api_goback_proto_rawDescData
 }
 
-var file_lib_api_goback_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_lib_api_goback_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_lib_api_goback_proto_goTypes = []any{
 	(*CreateAccountRequest)(nil),   // 0: api.CreateAccountRequest
 	(*CreateAccountResponse)(nil),  // 1: api.CreateAccountResponse
 	(*AccountRequest)(nil),         // 2: api.AccountRequest
 	(*AccountResponse)(nil),        // 3: api.AccountResponse
-	(*QuoteRequest)(nil),           // 4: api.QuoteRequest
-	(*QuoteResponse)(nil),          // 5: api.QuoteResponse
-	(*TxRequest)(nil),              // 6: api.TxRequest
-	(*TxResponse)(nil),             // 7: api.TxResponse
-	(*TransactionLogRequest)(nil),  // 8: api.TransactionLogRequest
-	(*TransactionLogResponse)(nil), // 9: api.TransactionLogResponse
-	(*CancelTxRequest)(nil),        // 10: api.CancelTxRequest
-	(*CancelTxResponse)(nil),       // 11: api.CancelTxResponse
-	(*CommitTxRequest)(nil),        // 12: api.CommitTxRequest
-	(*CommitTxResponse)(nil),       // 13: api.CommitTxResponse
-	(*TransactionLog)(nil),         // 14: api.TransactionLog
+	(*BalanceRequest)(nil),         // 4: api.BalanceRequest
+	(*BalanceResponse)(nil),        // 5: api.BalanceResponse
+	(*QuoteRequest)(nil),           // 6: api.QuoteRequest
+	(*QuoteResponse)(nil),          // 7: api.QuoteResponse
+	(*TxRequest)(nil),              // 8: api.TxRequest
+	(*TxResponse)(nil),             // 9: api.TxResponse
+	(*TransactionLogRequest)(nil),  // 10: api.TransactionLogRequest
+	(*TransactionLogResponse)(nil), // 11: api.TransactionLogResponse
+	(*CancelTxRequest)(nil),        // 12: api.CancelTxRequest
+	(*CancelTxResponse)(nil),       // 13: api.CancelTxResponse
+	(*CommitTxRequest)(nil),        // 14: api.CommitTxRequest
+	(*CommitTxResponse)(nil),       // 15: api.CommitTxResponse
+	(*TransactionLog)(nil),         // 16: api.TransactionLog
 }
 var file_lib_api_goback_proto_depIdxs = []int32{
-	14, // 0: api.TransactionLogResponse.TransactionLogs:type_name -> api.TransactionLog
+	16, // 0: api.TransactionLogResponse.TransactionLogs:type_name -> api.TransactionLog
 	0,  // 1: api.GoBack.CreateAccount:input_type -> api.CreateAccountRequest
 	2,  // 2: api.GoBack.GetAccount:input_type -> api.AccountRequest
-	4,  // 3: api.GoBack.GetQuote:input_type -> api.QuoteRequest
-	8,  // 4: api.GoBack.GetTransactionLogs:input_type -> api.TransactionLogRequest
-	10, // 5: api.GoBack.CancelTransaction:input_type -> api.CancelTxRequest
-	12, // 6: api.GoBack.CommitTransaction:input_type -> api.CommitTxRequest
-	1,  // 7: api.GoBack.CreateAccount:output_type -> api.CreateAccountResponse
-	3,  // 8: api.GoBack.GetAccount:output_type -> api.AccountResponse
-	5,  // 9: api.GoBack.GetQuote:output_type -> api.QuoteResponse
-	9,  // 10: api.GoBack.GetTransactionLogs:output_type -> api.TransactionLogResponse
-	11, // 11: api.GoBack.CancelTransaction:output_type -> api.CancelTxResponse
-	13, // 12: api.GoBack.CommitTransaction:output_type -> api.CommitTxResponse
-	7,  // [7:13] is the sub-list for method output_type
-	1,  // [1:7] is the sub-list for method input_type
+	4,  // 3: api.GoBack.AddBalance:input_type -> api.BalanceRequest
+	6,  // 4: api.GoBack.GetQuote:input_type -> api.QuoteRequest
+	10, // 5: api.GoBack.GetTransactionLogs:input_type -> api.TransactionLogRequest
+	12, // 6: api.GoBack.CancelTransaction:input_type -> api.CancelTxRequest
+	14, // 7: api.GoBack.CommitTransaction:input_type -> api.CommitTxRequest
+	1,  // 8: api.GoBack.CreateAccount:output_type -> api.CreateAccountResponse
+	3,  // 9: api.GoBack.GetAccount:output_type -> api.AccountResponse
+	5,  // 10: api.GoBack.AddBalance:output_type -> api.BalanceResponse
+	7,  // 11: api.GoBack.GetQuote:output_type -> api.QuoteResponse
+	11, // 12: api.GoBack.GetTransactionLogs:output_type -> api.TransactionLogResponse
+	13, // 13: api.GoBack.CancelTransaction:output_type -> api.CancelTxResponse
+	15, // 14: api.GoBack.CommitTransaction:output_type -> api.CommitTxResponse
+	8,  // [8:15] is the sub-list for method output_type
+	1,  // [1:8] is the sub-list for method input_type
 	1,  // [1:1] is the sub-list for extension type_name
 	1,  // [1:1] is the sub-list for extension extendee
 	0,  // [0:1] is the sub-list for field type_name
@@ -950,7 +1068,7 @@ func file_lib_api_goback_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lib_api_goback_proto_rawDesc), len(file_lib_api_goback_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   15,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

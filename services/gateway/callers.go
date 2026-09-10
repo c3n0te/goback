@@ -126,6 +126,19 @@ func CallGetAccount(gbc api.GoBackClient, userId string) (*api.AccountResponse, 
 	return resp, nil
 }
 
+func CallAddBalance(gbc api.GoBackClient, newBalanceReq *api.BalanceRequest) (*api.BalanceResponse, error) {
+	md := metadata.Pairs("timestamp", time.Now().UTC().Format(time.StampNano))
+	ctx := metadata.NewOutgoingContext(context.Background(), md)
+	slog.Info("Calling AddBalance")
+	resp, err := gbc.AddBalance(ctx, newBalanceReq)
+	if err != nil {
+		slog.Error("Failed to add to balance: ", "error", err)
+		return nil, err
+	}
+
+	return resp, nil
+}
+
 func CallGetQuote(gbc api.GoBackClient, ticker string) (*api.QuoteResponse, error) {
 	md := metadata.Pairs("timestamp", time.Now().UTC().Format(time.StampNano))
 	ctx := metadata.NewOutgoingContext(context.Background(), md)

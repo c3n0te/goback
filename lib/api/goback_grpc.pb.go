@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	GoBack_CreateAccount_FullMethodName      = "/api.GoBack/CreateAccount"
 	GoBack_GetAccount_FullMethodName         = "/api.GoBack/GetAccount"
+	GoBack_AddBalance_FullMethodName         = "/api.GoBack/AddBalance"
 	GoBack_GetQuote_FullMethodName           = "/api.GoBack/GetQuote"
 	GoBack_GetTransactionLogs_FullMethodName = "/api.GoBack/GetTransactionLogs"
 	GoBack_CancelTransaction_FullMethodName  = "/api.GoBack/CancelTransaction"
@@ -33,6 +34,7 @@ const (
 type GoBackClient interface {
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
 	GetAccount(ctx context.Context, in *AccountRequest, opts ...grpc.CallOption) (*AccountResponse, error)
+	AddBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error)
 	GetQuote(ctx context.Context, in *QuoteRequest, opts ...grpc.CallOption) (*QuoteResponse, error)
 	GetTransactionLogs(ctx context.Context, in *TransactionLogRequest, opts ...grpc.CallOption) (*TransactionLogResponse, error)
 	CancelTransaction(ctx context.Context, in *CancelTxRequest, opts ...grpc.CallOption) (*CancelTxResponse, error)
@@ -61,6 +63,16 @@ func (c *goBackClient) GetAccount(ctx context.Context, in *AccountRequest, opts 
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AccountResponse)
 	err := c.cc.Invoke(ctx, GoBack_GetAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *goBackClient) AddBalance(ctx context.Context, in *BalanceRequest, opts ...grpc.CallOption) (*BalanceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BalanceResponse)
+	err := c.cc.Invoke(ctx, GoBack_AddBalance_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -113,6 +125,7 @@ func (c *goBackClient) CommitTransaction(ctx context.Context, in *CommitTxReques
 type GoBackServer interface {
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
 	GetAccount(context.Context, *AccountRequest) (*AccountResponse, error)
+	AddBalance(context.Context, *BalanceRequest) (*BalanceResponse, error)
 	GetQuote(context.Context, *QuoteRequest) (*QuoteResponse, error)
 	GetTransactionLogs(context.Context, *TransactionLogRequest) (*TransactionLogResponse, error)
 	CancelTransaction(context.Context, *CancelTxRequest) (*CancelTxResponse, error)
@@ -132,6 +145,9 @@ func (UnimplementedGoBackServer) CreateAccount(context.Context, *CreateAccountRe
 }
 func (UnimplementedGoBackServer) GetAccount(context.Context, *AccountRequest) (*AccountResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAccount not implemented")
+}
+func (UnimplementedGoBackServer) AddBalance(context.Context, *BalanceRequest) (*BalanceResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddBalance not implemented")
 }
 func (UnimplementedGoBackServer) GetQuote(context.Context, *QuoteRequest) (*QuoteResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetQuote not implemented")
@@ -198,6 +214,24 @@ func _GoBack_GetAccount_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GoBackServer).GetAccount(ctx, req.(*AccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GoBack_AddBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BalanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GoBackServer).AddBalance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GoBack_AddBalance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GoBackServer).AddBalance(ctx, req.(*BalanceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -288,6 +322,10 @@ var GoBack_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAccount",
 			Handler:    _GoBack_GetAccount_Handler,
+		},
+		{
+			MethodName: "AddBalance",
+			Handler:    _GoBack_AddBalance_Handler,
 		},
 		{
 			MethodName: "GetQuote",

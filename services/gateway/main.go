@@ -125,6 +125,24 @@ func main() {
 		json.NewEncoder(w).Encode(createAccountRes)
 	})
 
+	mux.HandleFunc("POST /account/balance", func(w http.ResponseWriter, r *http.Request) {
+		var balanceReq api.BalanceRequest
+		if err := json.NewDecoder(r.Body).Decode(&balanceReq); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		balanceRes, err := CallAddBalance(gbc, &balanceReq)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(balanceRes)
+	})
+
 	mux.HandleFunc("GET /account/{userid}", func(w http.ResponseWriter, r *http.Request) {
 		userId := r.PathValue("userid")
 		accres, err := CallGetAccount(gbc, userId)

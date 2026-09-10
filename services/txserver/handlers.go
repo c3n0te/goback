@@ -95,6 +95,30 @@ func (srv *GoBackServer) ConsumeQueue() {
 	}
 }
 
+func (srv *GoBackServer) AddBalance(ctx context.Context, req *api.BalanceRequest) (*api.BalanceResponse, error) {
+	slog.Info("Adding Balance to existing account")
+	userId, err := uuid.Parse(req.UserId)
+	if err != nil {
+		slog.Error("Failed to parse UUID: ", "error", err)
+		slog.Error(fmt.Sprintf("Failed UUID: %v", userId))
+		return nil, err
+	}
+
+	currBalance, err := ReadBalanceWhereUserId(srv.DB, userId)
+	if err != nil {
+		slog.Error("Failed to read user balance: ", "error", err)
+		return nil, err
+	}
+
+	addBalanceRes, err := UpdateBalance(srv.DB, userId, req.AddAmount, currBalance)
+	if err != nil {
+		slog.Error("Failed to upsert balance amount to existing account", "error", err)
+		return nil, err
+	}
+
+	return addBalanceRes, nil
+}
+
 func (srv *GoBackServer) CreateAccount(ctx context.Context, req *api.CreateAccountRequest) (*api.CreateAccountResponse, error) {
 	slog.Info("Creating New User Account")
 	req.UserId = uuid.NewV4().String()

@@ -13,6 +13,7 @@ import (
 func InsertAccount(db *sqlx.DB, req *api.CreateAccountRequest) (*api.CreateAccountResponse, error) {
 	tx, err := db.Beginx()
 	if err != nil {
+		slog.Error("Failed to create db transaction object: ", "error", err)
 		return nil, err
 	}
 	defer tx.Rollback()
@@ -46,6 +47,7 @@ func InsertAccount(db *sqlx.DB, req *api.CreateAccountRequest) (*api.CreateAccou
 func InsertTransaction(db *sqlx.DB, req *api.TxRequest) error {
 	tx, err := db.Beginx()
 	if err != nil {
+		slog.Error("Failed to create db transaction object: ", "error", err)
 		return err
 	}
 	defer tx.Rollback()

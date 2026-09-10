@@ -9,6 +9,34 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+func ReadBalanceWhereUserId(db *sqlx.DB, userId uuid.UUID) (float32, error) {
+	rows, err := db.Queryx(
+		`SELECT
+			balance
+		FROM Accounts
+		WHERE userid = $1
+		LIMIT 1`,
+		userId,
+	)
+
+	if err != nil {
+		slog.Error("Failed to query Accounts table: ", "error", err)
+		return 0.0, err
+	}
+	defer rows.Close()
+
+	acc := api.Account{}
+	for rows.Next() {
+		err = rows.StructScan(&acc)
+		if err != nil {
+			slog.Error("Failed to marshal db rows into Account struct: ", "error", err)
+			return 0.0, err
+		}
+	}
+
+	return acc.Balance, nil
+}
+
 func ReadAccountWhereUserId(db *sqlx.DB, userId uuid.UUID) (*api.AccountResponse, error) {
 	rows, err := db.Queryx(
 		`SELECT
@@ -33,7 +61,7 @@ func ReadAccountWhereUserId(db *sqlx.DB, userId uuid.UUID) (*api.AccountResponse
 	for rows.Next() {
 		err = rows.StructScan(&acc)
 		if err != nil {
-			slog.Error("Failed to marshal db rows into AccountResponse struct: ", "error", err)
+			slog.Error("Failed to marshal db rows into Account struct: ", "error", err)
 			return nil, err
 		}
 	}

@@ -5,6 +5,7 @@ package api;
 service GoBack {
     rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse) {};
     rpc GetAccount(AccountRequest) returns (AccountResponse) {};
+    rpc AddBalance(BalanceRequest) returns (BalanceResponse) {};
     rpc GetQuote(QuoteRequest) returns (QuoteResponse) {};
     rpc GetTransactionLogs(TransactionLogRequest) returns (TransactionLogResponse) {};
     rpc CancelTransaction(CancelTxRequest) returns (CancelTxResponse) {};
@@ -30,6 +31,14 @@ message AccountResponse {
     string Email = 3;
     string Password = 4;
     float  Balance = 5;
+}
+message BalanceRequest {
+    string UserId = 1;
+    float AddAmount = 2;
+}
+message BalanceResponse {
+    bool Status = 1;
+    float NewBalance = 2;
 }
 message QuoteRequest {
     string Stock = 1;
