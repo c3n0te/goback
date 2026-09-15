@@ -52,7 +52,6 @@ func InsertTransaction(db *sqlx.DB, req *api.TxRequest) error {
 	}
 	defer tx.Rollback()
 
-	ts := time.Now().UTC().Format(time.RFC3339)
 	_, err = tx.Exec(
 		`INSERT INTO Transactions
 			(txid, userid, type, timestamp, stock, shares)
@@ -61,7 +60,7 @@ func InsertTransaction(db *sqlx.DB, req *api.TxRequest) error {
 		uuid.NewV4().String(),
 		req.UserId,
 		req.Type,
-		ts,
+		time.Now().UTC().Format(time.RFC3339),
 		req.Stock,
 		req.Shares,
 	)

@@ -14,6 +14,12 @@ func Migrate(db *sqlx.DB) {
         balance			DECIMAL
     );
 
+    CREATE TABLE IF NOT EXISTS Portfolios (
+    	userid			TEXT,
+     	stock			TEXT,
+      	shares			DECIMAL
+    );
+
     CREATE TABLE IF NOT EXISTS Transactions (
     	txid			TEXT UNIQUE PRIMARY KEY,
      	userid			TEXT,

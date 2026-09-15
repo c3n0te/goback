@@ -6,6 +6,7 @@ service GoBack {
     rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse) {};
     rpc GetAccount(AccountRequest) returns (AccountResponse) {};
     rpc AddBalance(BalanceRequest) returns (BalanceResponse) {};
+    rpc GetPortfolio(PortfolioRequest) returns (PortfolioResponse) {};
     rpc GetQuote(QuoteRequest) returns (QuoteResponse) {};
     rpc GetTransactionLogs(TransactionLogRequest) returns (TransactionLogResponse) {};
     rpc CancelTransaction(CancelTxRequest) returns (CancelTxResponse) {};
@@ -34,11 +35,23 @@ message AccountResponse {
 }
 message BalanceRequest {
     string UserId = 1;
-    float AddAmount = 2;
+    float  AddAmount = 2;
 }
 message BalanceResponse {
-    bool Status = 1;
+    bool  Status = 1;
     float NewBalance = 2;
+}
+message PortfolioRequest {
+    string UserId = 1;
+}
+message PortfolioLog {
+    string UserId = 1;
+    string Stock = 2;
+    float  Shares = 3;
+}
+message PortfolioResponse {
+    string UserId = 1;
+    repeated PortfolioLog PortfolioLogs = 2;
 }
 message QuoteRequest {
     string Stock = 1;
@@ -54,11 +67,11 @@ message TxRequest {
     float  Shares = 4;
 }
 message TxResponse {
-    bool Status = 1;
+    bool   Status = 1;
     string Type = 2;
     string Timestamp = 3;
     string Stock = 4;
-    float Shares = 5;
+    float  Shares = 5;
 }
 message TransactionLogRequest {
     string UserId = 1;

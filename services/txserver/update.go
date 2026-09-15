@@ -24,7 +24,7 @@ func UpdateBalance(db *sqlx.DB, userId uuid.UUID, addAmount float32, currBalance
 	)
 
 	if err != nil {
-		slog.Error("Failed to insert transaction", "error", err)
+		slog.Error("Failed to update account balance", "error", err)
 		return nil, err
 	}
 
@@ -35,4 +35,29 @@ func UpdateBalance(db *sqlx.DB, userId uuid.UUID, addAmount float32, currBalance
 	}
 
 	return bres, nil
+}
+
+func UpdatePortfolio(db *sqlx.DB, userId uuid.UUID, stock string, addShares float32, currShares float32) error {
+	tx, err := db.Beginx()
+	if err != nil {
+		slog.Error("Failed to create db transaction object: ", "error", err)
+		return err
+	}
+	defer tx.Rollback()
+
+	newShares := currShares + addShares
+	_, err = tx.Exec(
+		`UPDATE Portfolios SET shares = $1 WHERE userid = $2 AND stock = $3`,
+		newShares,
+		userId,
+		stock,
+	)
+
+	if err != nil {
+		slog.Error("Failed to update portfolio", "error", err)
+		return err
+	}
+
+	tx.Commit()
+	return nil
 }

@@ -73,6 +73,24 @@ func (srv *GoBackServer) HandleQueueMessage(ctx context.Context, delivery rmq.ID
 		slog.Error("Failed to insert transaction: ", "error", err)
 		return
 	}
+
+	userId, err := uuid.Parse(newTxRequest.UserId)
+	if err != nil {
+		slog.Error("Failed to parse UUID: ", "error", err)
+		slog.Error(fmt.Sprintf("Failed UUID: %v", userId))
+		return
+	}
+
+	currShares, err := ReadPortfolioSharesWhereUserIdAndStock(srv.DB, userId, newTxRequest.Stock)
+	if err != nil {
+		slog.Error("Failed to read current portfolio shares: ", "error", err)
+		return
+	}
+
+	if err := UpdatePortfolio(srv.DB, userId, newTxRequest.Stock, newTxRequest.Shares, currShares); err != nil {
+		slog.Error("Failed to update portfolio shares: ", "error", err)
+		return
+	}
 }
 
 func (srv *GoBackServer) ConsumeQueue() {
@@ -93,6 +111,36 @@ func (srv *GoBackServer) ConsumeQueue() {
 
 		go srv.HandleQueueMessage(ctx, delivery)
 	}
+}
+
+func (srv *GoBackServer) GetPortfolio(ctx context.Context, req *api.PortfolioRequest) (*api.PortfolioResponse, error) {
+	slog.Info("Retrieving Portfolio")
+	if req.UserId == "" {
+		return nil, status.Error(codes.InvalidArgument, "UserId is required")
+	}
+
+	id := strings.TrimSpace(req.UserId)
+	id = strings.ReplaceAll(id, "\x00", "")
+
+	userId, err := uuid.Parse(id)
+	if err != nil {
+		slog.Error("Failed to parse Transaction UserId", "error", err)
+		slog.Error(fmt.Sprintf("Failed UserId: %v", req.UserId))
+		return nil, status.Errorf(codes.InvalidArgument, "Invalid ID format: %v", err)
+	}
+
+	pLogs, err := ReadPortfolioWhereUserId(srv.DB, userId)
+	if err != nil {
+		slog.Error("Failed to retrieve transaction logs from DB", "error", err)
+		return nil, err
+	}
+
+	pres := &api.PortfolioResponse{
+		UserId:        userId.String(),
+		PortfolioLogs: pLogs,
+	}
+
+	return pres, nil
 }
 
 func (srv *GoBackServer) AddBalance(ctx context.Context, req *api.BalanceRequest) (*api.BalanceResponse, error) {

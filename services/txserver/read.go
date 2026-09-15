@@ -9,6 +9,75 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+func ReadPortfolioSharesWhereUserIdAndStock(db *sqlx.DB, userId uuid.UUID, stock string) (float32, error) {
+	rows, err := db.Queryx(
+		`SELECT
+			shares
+		FROM Portfolios
+		WHERE userid = $1
+		AND stock = $2
+		LIMIT 1`,
+		userId,
+		stock,
+	)
+
+	if err != nil {
+		slog.Error("Failed to query Portfolios table: ", "error", err)
+		return 0.0, err
+	}
+	defer rows.Close()
+
+	portf := api.Portfolio{}
+	for rows.Next() {
+		err = rows.StructScan(&portf)
+		if err != nil {
+			slog.Error("Failed to marshal db rows into Portfolio struct: ", "error", err)
+			return 0.0, err
+		}
+	}
+
+	return portf.Shares, nil
+}
+
+func ReadPortfolioWhereUserId(db *sqlx.DB, userId uuid.UUID) ([]*api.PortfolioLog, error) {
+	rows, err := db.Queryx(
+		`SELECT
+			userid,
+			stock,
+			shares
+		FROM Portfolios
+		WHERE userid = $1`,
+		userId,
+	)
+
+	if err != nil {
+		slog.Error("Failed to query Portfolios table: ", "error", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	pLogs := []*api.PortfolioLog{}
+
+	for rows.Next() {
+		portf := api.Portfolio{}
+		err = rows.StructScan(&portf)
+		if err != nil {
+			slog.Error("Failed to marshal db rows into Portfolio struct: ", "error", err)
+			return nil, err
+		}
+
+		pLog := api.PortfolioLog{
+			UserId: portf.UserId.String(),
+			Stock:  portf.Stock,
+			Shares: portf.Shares,
+		}
+
+		pLogs = append(pLogs, &pLog)
+	}
+
+	return pLogs, nil
+}
+
 func ReadBalanceWhereUserId(db *sqlx.DB, userId uuid.UUID) (float32, error) {
 	rows, err := db.Queryx(
 		`SELECT

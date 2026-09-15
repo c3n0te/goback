@@ -21,3 +21,9 @@ type Transaction struct {
 	Stock     string    `db:"stock"`
 	Shares    float32   `db:"shares"`
 }
+
+type Portfolio struct {
+	UserId uuid.UUID `db:"userid"`
+	Stock  string    `db:"stock"`
+	Shares float32   `db:"shares"`
+}

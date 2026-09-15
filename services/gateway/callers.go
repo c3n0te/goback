@@ -96,6 +96,23 @@ func CallQueuePublish(qpublisher *rmq.Publisher, newTxReq *api.TxRequest) (*api.
 	return buyResp, nil
 }
 
+func CallGetPortfolio(gbc api.GoBackClient, userId string) (*api.PortfolioResponse, error) {
+	md := metadata.Pairs("timestamp", time.Now().UTC().Format(time.StampNano))
+	ctx := metadata.NewOutgoingContext(context.Background(), md)
+	slog.Info("Calling GetPortfolio")
+	req := &api.PortfolioRequest{
+		UserId: userId,
+	}
+
+	resp, err := gbc.GetPortfolio(ctx, req)
+	if err != nil {
+		slog.Error("Failed to get portfolio: ", "error", err)
+		return nil, err
+	}
+
+	return resp, nil
+}
+
 func CallCreateAccount(gbc api.GoBackClient, newAccount *api.CreateAccountRequest) (*api.CreateAccountResponse, error) {
 	md := metadata.Pairs("timestamp", time.Now().UTC().Format(time.StampNano))
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
