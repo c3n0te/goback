@@ -17,7 +17,8 @@ func Migrate(db *sqlx.DB) {
     CREATE TABLE IF NOT EXISTS Portfolios (
     	userid			TEXT,
      	stock			TEXT,
-      	shares			DECIMAL
+      	shares			DECIMAL,
+       CONSTRAINT uq_userid_stock UNIQUE (userid, stock)
     );
 
     CREATE TABLE IF NOT EXISTS Transactions (

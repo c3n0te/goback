@@ -143,16 +143,16 @@ func main() {
 		json.NewEncoder(w).Encode(balanceRes)
 	})
 
-	mux.HandleFunc("GET /account/portfolio/{userid}", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /portfolio/{userid}", func(w http.ResponseWriter, r *http.Request) {
 		userId := r.PathValue("userid")
-		accres, err := CallGetPortfolio(gbc, userId)
+		pres, err := CallGetPortfolio(gbc, userId)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(accres)
+		json.NewEncoder(w).Encode(pres)
 	})
 
 	mux.HandleFunc("GET /account/{userid}", func(w http.ResponseWriter, r *http.Request) {

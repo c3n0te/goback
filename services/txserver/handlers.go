@@ -87,8 +87,8 @@ func (srv *GoBackServer) HandleQueueMessage(ctx context.Context, delivery rmq.ID
 		return
 	}
 
-	if err := UpdatePortfolio(srv.DB, userId, newTxRequest.Stock, newTxRequest.Shares, currShares); err != nil {
-		slog.Error("Failed to update portfolio shares: ", "error", err)
+	if err := InsertPortfolio(srv.DB, &newTxRequest, currShares); err != nil {
+		slog.Error("Failed to insert portfolio row", "error", err)
 		return
 	}
 }
