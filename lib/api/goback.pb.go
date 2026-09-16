@@ -27,7 +27,7 @@ type CreateAccountRequest struct {
 	Username      string                 `protobuf:"bytes,2,opt,name=Username,proto3" json:"Username,omitempty"`
 	Email         string                 `protobuf:"bytes,3,opt,name=Email,proto3" json:"Email,omitempty"`
 	Password      string                 `protobuf:"bytes,4,opt,name=Password,proto3" json:"Password,omitempty"`
-	Balance       float32                `protobuf:"fixed32,5,opt,name=Balance,proto3" json:"Balance,omitempty"`
+	Balance       float64                `protobuf:"fixed64,5,opt,name=Balance,proto3" json:"Balance,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -90,7 +90,7 @@ func (x *CreateAccountRequest) GetPassword() string {
 	return ""
 }
 
-func (x *CreateAccountRequest) GetBalance() float32 {
+func (x *CreateAccountRequest) GetBalance() float64 {
 	if x != nil {
 		return x.Balance
 	}
@@ -191,7 +191,7 @@ type AccountResponse struct {
 	Username      string                 `protobuf:"bytes,2,opt,name=Username,proto3" json:"Username,omitempty"`
 	Email         string                 `protobuf:"bytes,3,opt,name=Email,proto3" json:"Email,omitempty"`
 	Password      string                 `protobuf:"bytes,4,opt,name=Password,proto3" json:"Password,omitempty"`
-	Balance       float32                `protobuf:"fixed32,5,opt,name=Balance,proto3" json:"Balance,omitempty"`
+	Balance       float64                `protobuf:"fixed64,5,opt,name=Balance,proto3" json:"Balance,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -254,7 +254,7 @@ func (x *AccountResponse) GetPassword() string {
 	return ""
 }
 
-func (x *AccountResponse) GetBalance() float32 {
+func (x *AccountResponse) GetBalance() float64 {
 	if x != nil {
 		return x.Balance
 	}
@@ -264,7 +264,7 @@ func (x *AccountResponse) GetBalance() float32 {
 type BalanceRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
-	AddAmount     float32                `protobuf:"fixed32,2,opt,name=AddAmount,proto3" json:"AddAmount,omitempty"`
+	AddAmount     float64                `protobuf:"fixed64,2,opt,name=AddAmount,proto3" json:"AddAmount,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -306,7 +306,7 @@ func (x *BalanceRequest) GetUserId() string {
 	return ""
 }
 
-func (x *BalanceRequest) GetAddAmount() float32 {
+func (x *BalanceRequest) GetAddAmount() float64 {
 	if x != nil {
 		return x.AddAmount
 	}
@@ -316,7 +316,7 @@ func (x *BalanceRequest) GetAddAmount() float32 {
 type BalanceResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Status        bool                   `protobuf:"varint,1,opt,name=Status,proto3" json:"Status,omitempty"`
-	NewBalance    float32                `protobuf:"fixed32,2,opt,name=NewBalance,proto3" json:"NewBalance,omitempty"`
+	NewBalance    float64                `protobuf:"fixed64,2,opt,name=NewBalance,proto3" json:"NewBalance,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -358,7 +358,7 @@ func (x *BalanceResponse) GetStatus() bool {
 	return false
 }
 
-func (x *BalanceResponse) GetNewBalance() float32 {
+func (x *BalanceResponse) GetNewBalance() float64 {
 	if x != nil {
 		return x.NewBalance
 	}
@@ -413,7 +413,7 @@ type PortfolioLog struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
 	Stock         string                 `protobuf:"bytes,2,opt,name=Stock,proto3" json:"Stock,omitempty"`
-	Shares        float32                `protobuf:"fixed32,3,opt,name=Shares,proto3" json:"Shares,omitempty"`
+	Shares        float64                `protobuf:"fixed64,3,opt,name=Shares,proto3" json:"Shares,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -462,7 +462,7 @@ func (x *PortfolioLog) GetStock() string {
 	return ""
 }
 
-func (x *PortfolioLog) GetShares() float32 {
+func (x *PortfolioLog) GetShares() float64 {
 	if x != nil {
 		return x.Shares
 	}
@@ -622,7 +622,8 @@ type TxRequest struct {
 	Type          string                 `protobuf:"bytes,1,opt,name=Type,proto3" json:"Type,omitempty"`
 	UserId        string                 `protobuf:"bytes,2,opt,name=UserId,proto3" json:"UserId,omitempty"`
 	Stock         string                 `protobuf:"bytes,3,opt,name=Stock,proto3" json:"Stock,omitempty"`
-	Shares        float32                `protobuf:"fixed32,4,opt,name=Shares,proto3" json:"Shares,omitempty"`
+	Shares        float64                `protobuf:"fixed64,4,opt,name=Shares,proto3" json:"Shares,omitempty"`
+	SharePrice    float64                `protobuf:"fixed64,5,opt,name=SharePrice,proto3" json:"SharePrice,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -678,9 +679,16 @@ func (x *TxRequest) GetStock() string {
 	return ""
 }
 
-func (x *TxRequest) GetShares() float32 {
+func (x *TxRequest) GetShares() float64 {
 	if x != nil {
 		return x.Shares
+	}
+	return 0
+}
+
+func (x *TxRequest) GetSharePrice() float64 {
+	if x != nil {
+		return x.SharePrice
 	}
 	return 0
 }
@@ -691,7 +699,8 @@ type TxResponse struct {
 	Type          string                 `protobuf:"bytes,2,opt,name=Type,proto3" json:"Type,omitempty"`
 	Timestamp     string                 `protobuf:"bytes,3,opt,name=Timestamp,proto3" json:"Timestamp,omitempty"`
 	Stock         string                 `protobuf:"bytes,4,opt,name=Stock,proto3" json:"Stock,omitempty"`
-	Shares        float32                `protobuf:"fixed32,5,opt,name=Shares,proto3" json:"Shares,omitempty"`
+	Shares        float64                `protobuf:"fixed64,5,opt,name=Shares,proto3" json:"Shares,omitempty"`
+	TotalCost     float64                `protobuf:"fixed64,6,opt,name=TotalCost,proto3" json:"TotalCost,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -754,9 +763,16 @@ func (x *TxResponse) GetStock() string {
 	return ""
 }
 
-func (x *TxResponse) GetShares() float32 {
+func (x *TxResponse) GetShares() float64 {
 	if x != nil {
 		return x.Shares
+	}
+	return 0
+}
+
+func (x *TxResponse) GetTotalCost() float64 {
+	if x != nil {
+		return x.TotalCost
 	}
 	return 0
 }
@@ -1008,7 +1024,8 @@ type TransactionLog struct {
 	Type          string                 `protobuf:"bytes,3,opt,name=Type,proto3" json:"Type,omitempty"`
 	Timestamp     string                 `protobuf:"bytes,4,opt,name=Timestamp,proto3" json:"Timestamp,omitempty"`
 	Stock         string                 `protobuf:"bytes,5,opt,name=Stock,proto3" json:"Stock,omitempty"`
-	Shares        float32                `protobuf:"fixed32,6,opt,name=Shares,proto3" json:"Shares,omitempty"`
+	Shares        float64                `protobuf:"fixed64,6,opt,name=Shares,proto3" json:"Shares,omitempty"`
+	SharePrice    float64                `protobuf:"fixed64,7,opt,name=SharePrice,proto3" json:"SharePrice,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1078,9 +1095,16 @@ func (x *TransactionLog) GetStock() string {
 	return ""
 }
 
-func (x *TransactionLog) GetShares() float32 {
+func (x *TransactionLog) GetShares() float64 {
 	if x != nil {
 		return x.Shares
+	}
+	return 0
+}
+
+func (x *TransactionLog) GetSharePrice() float64 {
+	if x != nil {
+		return x.SharePrice
 	}
 	return 0
 }
@@ -1095,7 +1119,7 @@ const file_lib_api_goback_proto_rawDesc = "" +
 	"\bUsername\x18\x02 \x01(\tR\bUsername\x12\x14\n" +
 	"\x05Email\x18\x03 \x01(\tR\x05Email\x12\x1a\n" +
 	"\bPassword\x18\x04 \x01(\tR\bPassword\x12\x18\n" +
-	"\aBalance\x18\x05 \x01(\x02R\aBalance\"/\n" +
+	"\aBalance\x18\x05 \x01(\x01R\aBalance\"/\n" +
 	"\x15CreateAccountResponse\x12\x16\n" +
 	"\x06UserId\x18\x01 \x01(\tR\x06UserId\"(\n" +
 	"\x0eAccountRequest\x12\x16\n" +
@@ -1105,21 +1129,21 @@ const file_lib_api_goback_proto_rawDesc = "" +
 	"\bUsername\x18\x02 \x01(\tR\bUsername\x12\x14\n" +
 	"\x05Email\x18\x03 \x01(\tR\x05Email\x12\x1a\n" +
 	"\bPassword\x18\x04 \x01(\tR\bPassword\x12\x18\n" +
-	"\aBalance\x18\x05 \x01(\x02R\aBalance\"F\n" +
+	"\aBalance\x18\x05 \x01(\x01R\aBalance\"F\n" +
 	"\x0eBalanceRequest\x12\x16\n" +
 	"\x06UserId\x18\x01 \x01(\tR\x06UserId\x12\x1c\n" +
-	"\tAddAmount\x18\x02 \x01(\x02R\tAddAmount\"I\n" +
+	"\tAddAmount\x18\x02 \x01(\x01R\tAddAmount\"I\n" +
 	"\x0fBalanceResponse\x12\x16\n" +
 	"\x06Status\x18\x01 \x01(\bR\x06Status\x12\x1e\n" +
 	"\n" +
-	"NewBalance\x18\x02 \x01(\x02R\n" +
+	"NewBalance\x18\x02 \x01(\x01R\n" +
 	"NewBalance\"*\n" +
 	"\x10PortfolioRequest\x12\x16\n" +
 	"\x06UserId\x18\x01 \x01(\tR\x06UserId\"T\n" +
 	"\fPortfolioLog\x12\x16\n" +
 	"\x06UserId\x18\x01 \x01(\tR\x06UserId\x12\x14\n" +
 	"\x05Stock\x18\x02 \x01(\tR\x05Stock\x12\x16\n" +
-	"\x06Shares\x18\x03 \x01(\x02R\x06Shares\"d\n" +
+	"\x06Shares\x18\x03 \x01(\x01R\x06Shares\"d\n" +
 	"\x11PortfolioResponse\x12\x16\n" +
 	"\x06UserId\x18\x01 \x01(\tR\x06UserId\x127\n" +
 	"\rPortfolioLogs\x18\x02 \x03(\v2\x11.api.PortfolioLogR\rPortfolioLogs\"$\n" +
@@ -1127,19 +1151,23 @@ const file_lib_api_goback_proto_rawDesc = "" +
 	"\x05Stock\x18\x01 \x01(\tR\x05Stock\";\n" +
 	"\rQuoteResponse\x12\x14\n" +
 	"\x05Stock\x18\x01 \x01(\tR\x05Stock\x12\x14\n" +
-	"\x05Price\x18\x02 \x01(\tR\x05Price\"e\n" +
+	"\x05Price\x18\x02 \x01(\tR\x05Price\"\x85\x01\n" +
 	"\tTxRequest\x12\x12\n" +
 	"\x04Type\x18\x01 \x01(\tR\x04Type\x12\x16\n" +
 	"\x06UserId\x18\x02 \x01(\tR\x06UserId\x12\x14\n" +
 	"\x05Stock\x18\x03 \x01(\tR\x05Stock\x12\x16\n" +
-	"\x06Shares\x18\x04 \x01(\x02R\x06Shares\"\x84\x01\n" +
+	"\x06Shares\x18\x04 \x01(\x01R\x06Shares\x12\x1e\n" +
+	"\n" +
+	"SharePrice\x18\x05 \x01(\x01R\n" +
+	"SharePrice\"\xa2\x01\n" +
 	"\n" +
 	"TxResponse\x12\x16\n" +
 	"\x06Status\x18\x01 \x01(\bR\x06Status\x12\x12\n" +
 	"\x04Type\x18\x02 \x01(\tR\x04Type\x12\x1c\n" +
 	"\tTimestamp\x18\x03 \x01(\tR\tTimestamp\x12\x14\n" +
 	"\x05Stock\x18\x04 \x01(\tR\x05Stock\x12\x16\n" +
-	"\x06Shares\x18\x05 \x01(\x02R\x06Shares\"/\n" +
+	"\x06Shares\x18\x05 \x01(\x01R\x06Shares\x12\x1c\n" +
+	"\tTotalCost\x18\x06 \x01(\x01R\tTotalCost\"/\n" +
 	"\x15TransactionLogRequest\x12\x16\n" +
 	"\x06UserId\x18\x01 \x01(\tR\x06UserId\"o\n" +
 	"\x16TransactionLogResponse\x12\x16\n" +
@@ -1148,14 +1176,17 @@ const file_lib_api_goback_proto_rawDesc = "" +
 	"\x0fCancelTxRequest\"\x12\n" +
 	"\x10CancelTxResponse\"\x11\n" +
 	"\x0fCommitTxRequest\"\x12\n" +
-	"\x10CommitTxResponse\"\x9c\x01\n" +
+	"\x10CommitTxResponse\"\xbc\x01\n" +
 	"\x0eTransactionLog\x12\x12\n" +
 	"\x04TxId\x18\x01 \x01(\tR\x04TxId\x12\x16\n" +
 	"\x06UserId\x18\x02 \x01(\tR\x06UserId\x12\x12\n" +
 	"\x04Type\x18\x03 \x01(\tR\x04Type\x12\x1c\n" +
 	"\tTimestamp\x18\x04 \x01(\tR\tTimestamp\x12\x14\n" +
 	"\x05Stock\x18\x05 \x01(\tR\x05Stock\x12\x16\n" +
-	"\x06Shares\x18\x06 \x01(\x02R\x06Shares2\x97\x04\n" +
+	"\x06Shares\x18\x06 \x01(\x01R\x06Shares\x12\x1e\n" +
+	"\n" +
+	"SharePrice\x18\a \x01(\x01R\n" +
+	"SharePrice2\x97\x04\n" +
 	"\x06GoBack\x12H\n" +
 	"\rCreateAccount\x12\x19.api.CreateAccountRequest\x1a\x1a.api.CreateAccountResponse\"\x00\x129\n" +
 	"\n" +

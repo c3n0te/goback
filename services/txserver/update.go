@@ -8,7 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func UpdateBalance(db *sqlx.DB, userId uuid.UUID, addAmount float32, currBalance float32) (*api.BalanceResponse, error) {
+func UpdateBalance(db *sqlx.DB, userId uuid.UUID, newBalance float64) (*api.BalanceResponse, error) {
 	tx, err := db.Beginx()
 	if err != nil {
 		slog.Error("Failed to create db transaction object: ", "error", err)
@@ -16,7 +16,6 @@ func UpdateBalance(db *sqlx.DB, userId uuid.UUID, addAmount float32, currBalance
 	}
 	defer tx.Rollback()
 
-	newBalance := addAmount + currBalance
 	_, err = tx.Exec(
 		`UPDATE Accounts SET balance = $1 WHERE userid = $2`,
 		newBalance,

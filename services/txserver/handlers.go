@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"math"
 	"net"
 	"os"
 	"os/signal"
@@ -54,26 +55,6 @@ func (srv *GoBackServer) HandleQueueMessage(ctx context.Context, delivery rmq.ID
 		slog.Info(fmt.Sprintf("TxRequest: %v", &newTxRequest))
 	}
 
-	transactionType := strings.ToUpper(newTxRequest.Type)
-	switch transactionType {
-	case "BUY":
-		slog.Info("Buy Request")
-	case "SELL":
-		slog.Info("Sell Request")
-	case "AUTOBUY":
-		slog.Info("AutoBuy Request")
-	case "AUTOSELL":
-		slog.Info("AutoSell Request")
-	default:
-		slog.Error(fmt.Sprintf("Failed to match transaction type of TxRequest. Type: %v", transactionType))
-		return
-	}
-
-	if err := InsertTransaction(srv.DB, &newTxRequest); err != nil {
-		slog.Error("Failed to insert transaction: ", "error", err)
-		return
-	}
-
 	userId, err := uuid.Parse(newTxRequest.UserId)
 	if err != nil {
 		slog.Error("Failed to parse UUID: ", "error", err)
@@ -87,7 +68,29 @@ func (srv *GoBackServer) HandleQueueMessage(ctx context.Context, delivery rmq.ID
 		return
 	}
 
-	if err := InsertPortfolio(srv.DB, &newTxRequest, currShares); err != nil {
+	currBalance, err := ReadBalanceWhereUserId(srv.DB, userId)
+	if err != nil {
+		slog.Error("Failed to read current portfolio shares: ", "error", err)
+		return
+	}
+
+	newShares, newBalance := calcNewSharesAndBalance(&newTxRequest, currShares, currBalance)
+	if math.Signbit(newShares) || math.Signbit(newBalance) {
+		slog.Error("Invalid operation, cannot have negative balance or shares")
+		return
+	}
+
+	if _, err := UpdateBalance(srv.DB, userId, newBalance); err != nil {
+		slog.Error("Failed to update balance", "error", err)
+		return
+	}
+
+	if err := InsertTransaction(srv.DB, &newTxRequest); err != nil {
+		slog.Error("Failed to insert transaction: ", "error", err)
+		return
+	}
+
+	if err := InsertPortfolio(srv.DB, &newTxRequest, newShares); err != nil {
 		slog.Error("Failed to insert portfolio row", "error", err)
 		return
 	}
@@ -158,7 +161,8 @@ func (srv *GoBackServer) AddBalance(ctx context.Context, req *api.BalanceRequest
 		return nil, err
 	}
 
-	addBalanceRes, err := UpdateBalance(srv.DB, userId, req.AddAmount, currBalance)
+	newBalance := currBalance + req.AddAmount
+	addBalanceRes, err := UpdateBalance(srv.DB, userId, newBalance)
 	if err != nil {
 		slog.Error("Failed to upsert balance amount to existing account", "error", err)
 		return nil, err

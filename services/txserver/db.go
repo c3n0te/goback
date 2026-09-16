@@ -27,7 +27,8 @@ func Migrate(db *sqlx.DB) {
       	type			TEXT,
         timestamp		TIMESTAMP,
     	stock			TEXT,
-     	shares			DECIMAL
+     	shares			DECIMAL,
+      	shareprice      DECIMAL
     );`
 
 	db.MustExec(schema)

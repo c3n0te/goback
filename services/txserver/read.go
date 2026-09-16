@@ -9,7 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func ReadPortfolioSharesWhereUserIdAndStock(db *sqlx.DB, userId uuid.UUID, stock string) (float32, error) {
+func ReadPortfolioSharesWhereUserIdAndStock(db *sqlx.DB, userId uuid.UUID, stock string) (float64, error) {
 	rows, err := db.Queryx(
 		`SELECT
 			shares
@@ -42,7 +42,6 @@ func ReadPortfolioSharesWhereUserIdAndStock(db *sqlx.DB, userId uuid.UUID, stock
 func ReadPortfolioWhereUserId(db *sqlx.DB, userId uuid.UUID) ([]*api.PortfolioLog, error) {
 	rows, err := db.Queryx(
 		`SELECT
-			userid,
 			stock,
 			shares
 		FROM Portfolios
@@ -67,7 +66,6 @@ func ReadPortfolioWhereUserId(db *sqlx.DB, userId uuid.UUID) ([]*api.PortfolioLo
 		}
 
 		pLog := api.PortfolioLog{
-			UserId: portf.UserId.String(),
 			Stock:  portf.Stock,
 			Shares: portf.Shares,
 		}
@@ -78,7 +76,7 @@ func ReadPortfolioWhereUserId(db *sqlx.DB, userId uuid.UUID) ([]*api.PortfolioLo
 	return pLogs, nil
 }
 
-func ReadBalanceWhereUserId(db *sqlx.DB, userId uuid.UUID) (float32, error) {
+func ReadBalanceWhereUserId(db *sqlx.DB, userId uuid.UUID) (float64, error) {
 	rows, err := db.Queryx(
 		`SELECT
 			balance
@@ -150,7 +148,6 @@ func ReadTransactionsWhereUserId(db *sqlx.DB, userId uuid.UUID) ([]*api.Transact
 	rows, err := db.Queryx(
 		`SELECT
 			txid,
-			userid,
 			type,
 			timestamp,
 			stock,
@@ -177,12 +174,12 @@ func ReadTransactionsWhereUserId(db *sqlx.DB, userId uuid.UUID) ([]*api.Transact
 		}
 
 		txLog := api.TransactionLog{
-			TxId:      tx.TxId.String(),
-			UserId:    tx.UserId.String(),
-			Type:      tx.Type,
-			Timestamp: tx.Timestamp.Format(time.RFC3339),
-			Stock:     tx.Stock,
-			Shares:    tx.Shares,
+			TxId:       tx.TxId.String(),
+			Type:       tx.Type,
+			Timestamp:  tx.Timestamp.Format(time.RFC3339),
+			Stock:      tx.Stock,
+			Shares:     tx.Shares,
+			SharePrice: tx.SharePrice,
 		}
 
 		txLogs = append(txLogs, &txLog)

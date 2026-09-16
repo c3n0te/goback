@@ -44,7 +44,7 @@ func InsertAccount(db *sqlx.DB, req *api.CreateAccountRequest) (*api.CreateAccou
 	return createAccountRes, nil
 }
 
-func InsertPortfolio(db *sqlx.DB, req *api.TxRequest, currShares float32) error {
+func InsertPortfolio(db *sqlx.DB, req *api.TxRequest, newShares float64) error {
 	tx, err := db.Beginx()
 	if err != nil {
 		slog.Error("Failed to create db transaction object: ", "error", err)
@@ -52,7 +52,6 @@ func InsertPortfolio(db *sqlx.DB, req *api.TxRequest, currShares float32) error 
 	}
 	defer tx.Rollback()
 
-	newShares := currShares + req.Shares
 	_, err = tx.Exec(
 		`INSERT INTO Portfolios
 			(userid, stock, shares)
@@ -72,7 +71,7 @@ func InsertPortfolio(db *sqlx.DB, req *api.TxRequest, currShares float32) error 
 	}
 
 	tx.Commit()
-	slog.Info(fmt.Sprintf("Portfolio row inserted: %v", req))
+	slog.Info("Portfolio row upserted")
 	return nil
 }
 
@@ -86,15 +85,16 @@ func InsertTransaction(db *sqlx.DB, req *api.TxRequest) error {
 
 	_, err = tx.Exec(
 		`INSERT INTO Transactions
-			(txid, userid, type, timestamp, stock, shares)
+			(txid, userid, type, timestamp, stock, shares, shareprice)
 		VALUES
-			($1, $2, $3, $4, $5, $6)`,
+			($1, $2, $3, $4, $5, $6, $7)`,
 		uuid.NewV4().String(),
 		req.UserId,
 		req.Type,
 		time.Now().UTC().Format(time.RFC3339),
 		req.Stock,
 		req.Shares,
+		req.SharePrice,
 	)
 
 	if err != nil {

@@ -18,7 +18,7 @@ message CreateAccountRequest {
     string Username = 2;
     string Email = 3;
     string Password = 4;
-    float  Balance = 5;
+    double Balance = 5;
 }
 message CreateAccountResponse {
     string UserId = 1;
@@ -31,15 +31,15 @@ message AccountResponse {
     string Username = 2;
     string Email = 3;
     string Password = 4;
-    float  Balance = 5;
+    double Balance = 5;
 }
 message BalanceRequest {
     string UserId = 1;
-    float  AddAmount = 2;
+    double AddAmount = 2;
 }
 message BalanceResponse {
-    bool  Status = 1;
-    float NewBalance = 2;
+    bool   Status = 1;
+    double NewBalance = 2;
 }
 message PortfolioRequest {
     string UserId = 1;
@@ -47,7 +47,7 @@ message PortfolioRequest {
 message PortfolioLog {
     string UserId = 1;
     string Stock = 2;
-    float  Shares = 3;
+    double Shares = 3;
 }
 message PortfolioResponse {
     string UserId = 1;
@@ -64,14 +64,16 @@ message TxRequest {
     string Type = 1;
     string UserId = 2;
     string Stock = 3;
-    float  Shares = 4;
+    double Shares = 4;
+    double SharePrice = 5;
 }
 message TxResponse {
     bool   Status = 1;
     string Type = 2;
     string Timestamp = 3;
     string Stock = 4;
-    float  Shares = 5;
+    double Shares = 5;
+    double TotalCost = 6;
 }
 message TransactionLogRequest {
     string UserId = 1;
@@ -90,5 +92,6 @@ message TransactionLog {
     string Type = 3;
     string Timestamp = 4;
     string Stock = 5;
-    float  Shares = 6;
+    double Shares = 6;
+    double SharePrice = 7;
 }
