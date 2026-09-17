@@ -17,6 +17,7 @@ import (
 	"time"
 	"uuid"
 
+	amqp "github.com/Azure/go-amqp"
 	"github.com/jmoiron/sqlx"
 	rmq "github.com/rabbitmq/rabbitmq-amqp-go-client/pkg/rabbitmqamqp"
 	"github.com/redis/go-redis/v9"
@@ -49,49 +50,85 @@ func (srv *GoBackServer) HandleQueueMessage(ctx context.Context, delivery rmq.ID
 	var newTxRequest api.TxRequest
 	if err := json.Unmarshal(rawBytes, &newTxRequest); err != nil {
 		slog.Error("Failed to unmarshal queue message into TxRequest: ", "error", err)
+		err = delivery.Discard(ctx, &amqp.Error{
+			Condition:   amqp.ErrCondInvalidField,
+			Description: err.Error(),
+		})
+
+		if err != nil {
+			slog.Error("Failed to communicate delivery error back to Queue", "error", err)
+		}
+
 		return
-	} else {
-		delivery.Accept(ctx)
-		slog.Info(fmt.Sprintf("TxRequest: %v", &newTxRequest))
 	}
 
+	slog.Info(fmt.Sprintf("TxRequest: %v", &newTxRequest))
 	userId, err := uuid.Parse(newTxRequest.UserId)
 	if err != nil {
 		slog.Error("Failed to parse UUID: ", "error", err)
 		slog.Error(fmt.Sprintf("Failed UUID: %v", userId))
+		err = delivery.Discard(ctx, &amqp.Error{
+			Condition:   amqp.ErrCondInvalidField,
+			Description: err.Error(),
+		})
+
+		if err != nil {
+			slog.Error("Failed to communicate delivery error back to Queue", "error", err)
+		}
+
 		return
 	}
 
 	currShares, err := ReadPortfolioSharesWhereUserIdAndStock(srv.DB, userId, newTxRequest.Stock)
 	if err != nil {
 		slog.Error("Failed to read current portfolio shares: ", "error", err)
+		delivery.Requeue(ctx)
 		return
 	}
 
 	currBalance, err := ReadBalanceWhereUserId(srv.DB, userId)
 	if err != nil {
 		slog.Error("Failed to read current portfolio shares: ", "error", err)
+		delivery.Requeue(ctx)
 		return
 	}
 
 	newShares, newBalance := calcNewSharesAndBalance(&newTxRequest, currShares, currBalance)
 	if math.Signbit(newShares) || math.Signbit(newBalance) {
 		slog.Error("Invalid operation, cannot have negative balance or shares")
+		err = delivery.Discard(ctx, &amqp.Error{
+			Condition:   amqp.ErrCondIllegalState,
+			Description: "Invalid Operation, cannot have negative balance or shares",
+		})
+
+		if err != nil {
+			slog.Error("Failed to communicate delivery error back to Queue", "error", err)
+		}
+
 		return
 	}
 
 	if _, err := UpdateBalance(srv.DB, userId, newBalance); err != nil {
 		slog.Error("Failed to update balance", "error", err)
+		delivery.Requeue(ctx)
+		return
+	}
+
+	if err := InsertPortfolioOnConflictNewShares(srv.DB, &newTxRequest, newShares); err != nil {
+		slog.Error("Failed to insert portfolio row", "error", err)
+		delivery.Requeue(ctx)
 		return
 	}
 
 	if err := InsertTransaction(srv.DB, &newTxRequest); err != nil {
 		slog.Error("Failed to insert transaction: ", "error", err)
+		delivery.Requeue(ctx)
 		return
 	}
 
-	if err := InsertPortfolio(srv.DB, &newTxRequest, newShares); err != nil {
-		slog.Error("Failed to insert portfolio row", "error", err)
+	err = delivery.Accept(ctx)
+	if err != nil {
+		slog.Error("Failed to communicate delivery acceptance back to Queue", "error", err)
 		return
 	}
 }

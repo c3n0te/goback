@@ -44,7 +44,7 @@ func InsertAccount(db *sqlx.DB, req *api.CreateAccountRequest) (*api.CreateAccou
 	return createAccountRes, nil
 }
 
-func InsertPortfolio(db *sqlx.DB, req *api.TxRequest, newShares float64) error {
+func InsertPortfolioOnConflictNewShares(db *sqlx.DB, req *api.TxRequest, newShares float64) error {
 	tx, err := db.Beginx()
 	if err != nil {
 		slog.Error("Failed to create db transaction object: ", "error", err)

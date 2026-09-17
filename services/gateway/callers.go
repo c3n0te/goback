@@ -13,7 +13,7 @@ import (
 )
 
 func CallQueuePublish(qpublisher *rmq.Publisher, newTxReq *api.TxRequest) (*api.TxResponse, error) {
-	slog.Info("Publishing Tx Request to Message Queue")
+	slog.Info("Publishing TxRequest to Message Queue")
 	body, err := json.Marshal(newTxReq)
 	if err != nil {
 		slog.Error("Failed to marshal TxRequest", "error", err)

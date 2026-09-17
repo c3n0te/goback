@@ -14,22 +14,18 @@ func calcNewSharesAndBalance(newTxRequest *api.TxRequest, currShares float64, cu
 
 	switch transactionType {
 	case "BUY":
-		slog.Info("Buy Request")
 		newShares = currShares + newTxRequest.Shares
 		newBalance = currBalance - (newTxRequest.Shares * newTxRequest.SharePrice)
 
 	case "SELL":
-		slog.Info("Sell Request")
 		newShares = currShares - newTxRequest.Shares
 		newBalance = currBalance + (newTxRequest.Shares * newTxRequest.SharePrice)
 
 	case "AUTOBUY":
-		slog.Info("AutoBuy Request")
 		newShares = currShares + newTxRequest.Shares
 		newBalance = currBalance - (newTxRequest.Shares * newTxRequest.SharePrice)
 
 	case "AUTOSELL":
-		slog.Info("AutoSell Request")
 		newShares = currShares - newTxRequest.Shares
 		newBalance = currBalance + (newTxRequest.Shares * newTxRequest.SharePrice)
 
