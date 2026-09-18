@@ -12,6 +12,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 	"syscall"
 	"time"
@@ -24,6 +25,11 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
+
+type AutoTxResult struct {
+	SharePrice float64
+	Error      error
+}
 
 type GoBackServer struct {
 	api.GoBackServer
@@ -93,7 +99,7 @@ func (srv *GoBackServer) HandleQueueMessage(ctx context.Context, delivery rmq.ID
 		return
 	}
 
-	newShares, newBalance := calcNewSharesAndBalance(&newTxRequest, currShares, currBalance)
+	newShares, newBalance := srv.HandleTxRequestType(&newTxRequest, currShares, currBalance)
 	if math.Signbit(newShares) || math.Signbit(newBalance) {
 		slog.Error("Invalid operation, cannot have negative balance or shares")
 		err = delivery.Discard(ctx, &amqp.Error{
@@ -151,6 +157,142 @@ func (srv *GoBackServer) ConsumeQueue() {
 
 		go srv.HandleQueueMessage(ctx, delivery)
 	}
+}
+
+func (srv *GoBackServer) HandleAutoBuyRequest(ch chan AutoTxResult, stock string, tgtPrice float64) {
+	currStockPriceFloat := tgtPrice
+	var currStockPrice string
+
+	for currStockPriceFloat >= tgtPrice {
+		reader := bufio.NewReader(srv.Quote)
+		msg := fmt.Sprintf("%v\n", stock)
+		srv.Quote.Write([]byte(msg))
+		resp, err := reader.ReadString('\n')
+		if err != nil {
+			slog.Error("Failed to read Quote Server quote: ", "error", err)
+			res := AutoTxResult{
+				SharePrice: -1.0,
+				Error:      err,
+			}
+
+			ch <- res
+		}
+
+		slog.Info(fmt.Sprintf("Quote Server response: %v", resp))
+		currStockPrice = strings.Split(resp, ",")[1]
+
+		currStockPriceFloat, err = strconv.ParseFloat(currStockPrice, 64)
+		if err != nil {
+			slog.Error("Failed to convert stock price string to float", "error", err)
+			res := AutoTxResult{
+				SharePrice: -1.0,
+				Error:      err,
+			}
+
+			ch <- res
+		}
+	}
+
+	res := AutoTxResult{
+		SharePrice: currStockPriceFloat,
+		Error:      nil,
+	}
+
+	ch <- res
+}
+
+func (srv *GoBackServer) HandleAutoSellRequest(ch chan AutoTxResult, stock string, tgtPrice float64) {
+	currStockPriceFloat := tgtPrice
+	var currStockPrice string
+
+	for currStockPriceFloat <= tgtPrice {
+		reader := bufio.NewReader(srv.Quote)
+		msg := fmt.Sprintf("%v\n", stock)
+		srv.Quote.Write([]byte(msg))
+		resp, err := reader.ReadString('\n')
+		if err != nil {
+			slog.Error("Failed to read Quote Server quote: ", "error", err)
+			res := AutoTxResult{
+				SharePrice: -1.0,
+				Error:      err,
+			}
+
+			ch <- res
+		}
+
+		slog.Info(fmt.Sprintf("Quote Server response: %v", resp))
+		currStockPrice = strings.Split(resp, ",")[1]
+
+		currStockPriceFloat, err = strconv.ParseFloat(currStockPrice, 64)
+		if err != nil {
+			slog.Error("Failed to convert stock price string to float", "error", err)
+			res := AutoTxResult{
+				SharePrice: -1.0,
+				Error:      err,
+			}
+
+			ch <- res
+		}
+	}
+
+	res := AutoTxResult{
+		SharePrice: currStockPriceFloat,
+		Error:      nil,
+	}
+
+	ch <- res
+}
+
+func (srv *GoBackServer) HandleTxRequestType(newTxRequest *api.TxRequest, currShares float64, currBalance float64) (float64, float64) {
+	newShares := float64(0.0)
+	newBalance := float64(0.0)
+	transactionType := strings.ToUpper(newTxRequest.Type)
+
+	switch transactionType {
+	case "BUY":
+		newShares = currShares + newTxRequest.Shares
+		newBalance = currBalance - (newTxRequest.Shares * newTxRequest.SharePrice)
+
+	case "SELL":
+		newShares = currShares - newTxRequest.Shares
+		newBalance = currBalance + (newTxRequest.Shares * newTxRequest.SharePrice)
+
+	case "AUTOBUY":
+		ch := make(chan AutoTxResult)
+		go srv.HandleAutoBuyRequest(ch, newTxRequest.Stock, newTxRequest.SharePrice)
+		txRes := <-ch
+
+		if txRes.Error != nil {
+			slog.Error("Failed to handle AutoBuy request", "error", txRes.Error)
+			return -1.0, -1.0
+		}
+
+		slog.Info(fmt.Sprintf("Updating TxRequest with new Quoted SharePrice, old price: %v; new price: %v", newTxRequest.SharePrice, txRes.SharePrice))
+		newTxRequest.SharePrice = txRes.SharePrice
+		newShares = currShares + newTxRequest.Shares
+		newBalance = currBalance - (newTxRequest.Shares * newTxRequest.SharePrice)
+
+	case "AUTOSELL":
+		ch := make(chan AutoTxResult)
+		go srv.HandleAutoSellRequest(ch, newTxRequest.Stock, newTxRequest.SharePrice)
+		txRes := <-ch
+
+		if txRes.Error != nil {
+			slog.Error("Failed to handle AutoSell request", "error", txRes.Error)
+			return -1.0, -1.0
+		}
+
+		slog.Info(fmt.Sprintf("Updating TxRequest with new Quoted SharePrice, old price: %v; new price: %v", newTxRequest.SharePrice, txRes.SharePrice))
+		newTxRequest.SharePrice = txRes.SharePrice
+		newShares = currShares - newTxRequest.Shares
+		newBalance = currBalance + (newTxRequest.Shares * newTxRequest.SharePrice)
+
+	default:
+		slog.Error(fmt.Sprintf("Failed to match transaction type of TxRequest. Type: %v", transactionType))
+		return -1.0, -1.0
+	}
+
+	return newShares, newBalance
 }
 
 func (srv *GoBackServer) GetPortfolio(ctx context.Context, req *api.PortfolioRequest) (*api.PortfolioResponse, error) {
