@@ -176,6 +176,7 @@ func (srv *GoBackServer) HandleAutoBuyRequest(ch chan *AutoTxResult, stock strin
 			}
 
 			ch <- res
+			return
 		}
 
 		slog.Info(fmt.Sprintf("Quote Server response: %v", resp))
@@ -190,6 +191,7 @@ func (srv *GoBackServer) HandleAutoBuyRequest(ch chan *AutoTxResult, stock strin
 			}
 
 			ch <- res
+			return
 		}
 	}
 
@@ -218,6 +220,7 @@ func (srv *GoBackServer) HandleAutoSellRequest(ch chan *AutoTxResult, stock stri
 			}
 
 			ch <- res
+			return
 		}
 
 		slog.Info(fmt.Sprintf("Quote Server response: %v", resp))
@@ -232,6 +235,7 @@ func (srv *GoBackServer) HandleAutoSellRequest(ch chan *AutoTxResult, stock stri
 			}
 
 			ch <- res
+			return
 		}
 	}
 
