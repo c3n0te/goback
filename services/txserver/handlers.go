@@ -159,7 +159,7 @@ func (srv *GoBackServer) ConsumeQueue() {
 	}
 }
 
-func (srv *GoBackServer) HandleAutoBuyRequest(ch chan AutoTxResult, stock string, tgtPrice float64) {
+func (srv *GoBackServer) HandleAutoBuyRequest(ch chan *AutoTxResult, stock string, tgtPrice float64) {
 	currStockPriceFloat := tgtPrice
 	var currStockPrice string
 
@@ -170,7 +170,7 @@ func (srv *GoBackServer) HandleAutoBuyRequest(ch chan AutoTxResult, stock string
 		resp, err := reader.ReadString('\n')
 		if err != nil {
 			slog.Error("Failed to read Quote Server quote: ", "error", err)
-			res := AutoTxResult{
+			res := &AutoTxResult{
 				SharePrice: -1.0,
 				Error:      err,
 			}
@@ -184,7 +184,7 @@ func (srv *GoBackServer) HandleAutoBuyRequest(ch chan AutoTxResult, stock string
 		currStockPriceFloat, err = strconv.ParseFloat(currStockPrice, 64)
 		if err != nil {
 			slog.Error("Failed to convert stock price string to float", "error", err)
-			res := AutoTxResult{
+			res := &AutoTxResult{
 				SharePrice: -1.0,
 				Error:      err,
 			}
@@ -193,7 +193,7 @@ func (srv *GoBackServer) HandleAutoBuyRequest(ch chan AutoTxResult, stock string
 		}
 	}
 
-	res := AutoTxResult{
+	res := &AutoTxResult{
 		SharePrice: currStockPriceFloat,
 		Error:      nil,
 	}
@@ -201,7 +201,7 @@ func (srv *GoBackServer) HandleAutoBuyRequest(ch chan AutoTxResult, stock string
 	ch <- res
 }
 
-func (srv *GoBackServer) HandleAutoSellRequest(ch chan AutoTxResult, stock string, tgtPrice float64) {
+func (srv *GoBackServer) HandleAutoSellRequest(ch chan *AutoTxResult, stock string, tgtPrice float64) {
 	currStockPriceFloat := tgtPrice
 	var currStockPrice string
 
@@ -212,7 +212,7 @@ func (srv *GoBackServer) HandleAutoSellRequest(ch chan AutoTxResult, stock strin
 		resp, err := reader.ReadString('\n')
 		if err != nil {
 			slog.Error("Failed to read Quote Server quote: ", "error", err)
-			res := AutoTxResult{
+			res := &AutoTxResult{
 				SharePrice: -1.0,
 				Error:      err,
 			}
@@ -226,7 +226,7 @@ func (srv *GoBackServer) HandleAutoSellRequest(ch chan AutoTxResult, stock strin
 		currStockPriceFloat, err = strconv.ParseFloat(currStockPrice, 64)
 		if err != nil {
 			slog.Error("Failed to convert stock price string to float", "error", err)
-			res := AutoTxResult{
+			res := &AutoTxResult{
 				SharePrice: -1.0,
 				Error:      err,
 			}
@@ -235,7 +235,7 @@ func (srv *GoBackServer) HandleAutoSellRequest(ch chan AutoTxResult, stock strin
 		}
 	}
 
-	res := AutoTxResult{
+	res := &AutoTxResult{
 		SharePrice: currStockPriceFloat,
 		Error:      nil,
 	}
@@ -258,7 +258,7 @@ func (srv *GoBackServer) HandleTxRequestType(newTxRequest *api.TxRequest, currSh
 		newBalance = currBalance + (newTxRequest.Shares * newTxRequest.SharePrice)
 
 	case "AUTOBUY":
-		ch := make(chan AutoTxResult)
+		ch := make(chan *AutoTxResult)
 		go srv.HandleAutoBuyRequest(ch, newTxRequest.Stock, newTxRequest.SharePrice)
 		txRes := <-ch
 
@@ -273,7 +273,7 @@ func (srv *GoBackServer) HandleTxRequestType(newTxRequest *api.TxRequest, currSh
 		newBalance = currBalance - (newTxRequest.Shares * newTxRequest.SharePrice)
 
 	case "AUTOSELL":
-		ch := make(chan AutoTxResult)
+		ch := make(chan *AutoTxResult)
 		go srv.HandleAutoSellRequest(ch, newTxRequest.Stock, newTxRequest.SharePrice)
 		txRes := <-ch
 
