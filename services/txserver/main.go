@@ -9,6 +9,8 @@ import (
 	"os"
 	"time"
 
+	"buf.build/go/protovalidate"
+	protovalidate_middleware "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/protovalidate"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	rmq "github.com/rabbitmq/rabbitmq-amqp-go-client/pkg/rabbitmqamqp"
@@ -153,7 +155,16 @@ func main() {
 	quoteConn := NewQuoteConnWithRetry(cfg)
 	defer quoteConn.Close()
 
-	srv := grpc.NewServer()
+	validator, err := protovalidate.New()
+	if err != nil {
+		slog.Error("Failed to create validator: ", "error", err)
+		os.Exit(1)
+	}
+
+	srv := grpc.NewServer(
+		grpc.UnaryInterceptor(protovalidate_middleware.UnaryServerInterceptor(validator)),
+	)
+
 	goback := NewGoBackServer(db, cache, qconsumer, quoteConn)
 	go goback.ConsumeQueue()
 	api.RegisterGoBackServer(srv, &goback)

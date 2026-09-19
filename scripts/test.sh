@@ -1,17 +1,17 @@
 #Windows
-curl.exe -X POST http://127.0.0.1:8000/account -H "Content-Type: application/json" -d '{\"Username\":\"c3n0te\", \"Email\":\"c3n0te@gmail.com\", \"Password\":\"secret\", \"Balance\":500000.0}'
-curl.exe -X POST http://127.0.0.1:8000/account -H "Content-Type: application/json" -d '{\"Username\":\"t0rch\", \"Email\":\"t0rch@gmail.com\", \"Password\":\"secret\", \"Balance\":1000000.0}'
-curl.exe -X POST http://127.0.0.1:8000/buy -H "Content-Type: application/json" -d '{\"Type\":\"Buy\", \"UserId\":\"<Fill This In>\", \"Stock\":\"AAPL\", \"Shares\":5000.0, \"SharePrice\":97.52}'
-curl.exe -X POST http://127.0.0.1:8000/buy/auto -H "Content-Type: application/json" -d '{\"Type\":\"AutoBuy\", \"UserId\":\"<Fill This In>\", \"Stock\":\"SPCX\", \"Shares\":10000.0, \"SharePrice\":10.50}'
-curl.exe -X POST http://127.0.0.1:8000/sell -H "Content-Type: application/json" -d '{\"Type\":\"Sell\", \"UserId\":\"<Fill This In>\", \"Stock\":\"TSLA\", \"Shares\":500.0, \"SharePrice\":97.52}'
-curl.exe -X POST http://127.0.0.1:8000/sell/auto -H "Content-Type: application/json" -d '{\"Type\":\"AutoSell\", \"UserId\":\"<Fill This In>\", \"Stock\":\"GOOG\", \"Shares\":1000.0, \"SharePrice\":90.43}'
+curl.exe -X POST http://127.0.0.1:8000/account -H "Content-Type: application/json" -d '{\"username\":\"c3n0te\", \"email\":\"c3n0te@gmail.com\", \"password\":\"secret1234\", \"balance\":500000.0}'
+curl.exe -X POST http://127.0.0.1:8000/account -H "Content-Type: application/json" -d '{\"username\":\"t0rch\", \"email\":\"t0rch@gmail.com\", \"password\":\"secret1234\", \"balance\":1000000.0}'
+curl.exe -X POST http://127.0.0.1:8000/buy -H "Content-Type: application/json" -d '{\"type\":\"Buy\", \"user_id\":\"<Fill This In>\", \"stock\":\"AAPL\", \"shares\":5000.0, \"share_price\":97.52}'
+curl.exe -X POST http://127.0.0.1:8000/buy/auto -H "Content-Type: application/json" -d '{\"type\":\"AutoBuy\", \"user_id\":\"<Fill This In>\", \"stock\":\"SPCX\", \"shares\":10000.0, \"share_price\":10.50}'
+curl.exe -X POST http://127.0.0.1:8000/sell -H "Content-Type: application/json" -d '{\"type\":\"Sell\", \"user_id\":\"<Fill This In>\", \"stock\":\"TSLA\", \"shares\":500.0, \"share_price\":97.52}'
+curl.exe -X POST http://127.0.0.1:8000/sell/auto -H "Content-Type: application/json" -d '{\"type\":\"AutoSell\", \"user_id\":\"<Fill This In>\", \"stock\":\"GOOG\", \"shares\":1000.0, \"share_price\":90.43}'
 curl.exe http://127.0.0.1:8000/transactions/<FILL THIS IN>
 curl.exe 127.0.0.1:8000/portfolio/<FILL THIS IN>
 
 #MacOS
 curl -X POST http://127.0.0.1:8000/account -H "Content-Type: application/json" -d '{"Username":"c3n0te", "Email":"c3n0te@gmail.com", "Password":"secret", "Balance":1000000.0}'
 curl -X POST http://127.0.0.1:8000/account -H "Content-Type: application/json" -d '{"Username":"t0rch", "Email":"t0rch@gmail.com", "Password":"secret", "Balance":5000000.0}'
-curl -X POST 127.0.0.1:8000/buy -H "Content-Type: application/json" -d '{"Type":"AutoBuy", "UserId":"<Fill This In>", "Stock":"AAPL", "Shares":5000.0, "SharePrice":10.52}'
-curl -X POST 127.0.0.1:8000/sell -H "Content-Type: application/json" -d '{"Type":"AutoSell", "UserId":"<Fill This In>", "Stock":"TSLA", "Shares":500.0, "SharePrice":90.37}'
+curl -X POST 127.0.0.1:8000/buy/auto -H "Content-Type: application/json" -d '{"Type":"AutoBuy", "UserId":"<Fill This In>", "Stock":"AAPL", "Shares":5000.0, "SharePrice":10.52}'
+curl -X POST 127.0.0.1:8000/sell/auto -H "Content-Type: application/json" -d '{"Type":"AutoSell", "UserId":"<Fill This In>", "Stock":"TSLA", "Shares":500.0, "SharePrice":90.37}'
 curl 127.0.0.1:8000/transactions/<FILL THIS IN>
 curl -X POST 127.0.0.1:8000/account/balance -H "Content-Type: application/json" -d '{"UserID":"<FILL THIS IN>", "AddAmount":2500.0}'

@@ -72,7 +72,7 @@ func (srv *GoBackServer) HandleQueueMessage(ctx context.Context, delivery rmq.ID
 	userId, err := uuid.Parse(newTxRequest.UserId)
 	if err != nil {
 		slog.Error("Failed to parse UUID: ", "error", err)
-		slog.Error(fmt.Sprintf("Failed UUID: %v", userId))
+		slog.Error(fmt.Sprintf("Failed UUID: %v", newTxRequest.UserId))
 		err = delivery.Discard(ctx, &amqp.Error{
 			Condition:   amqp.ErrCondInvalidField,
 			Description: err.Error(),
@@ -356,7 +356,6 @@ func (srv *GoBackServer) AddBalance(ctx context.Context, req *api.BalanceRequest
 
 func (srv *GoBackServer) CreateAccount(ctx context.Context, req *api.CreateAccountRequest) (*api.CreateAccountResponse, error) {
 	slog.Info("Creating New User Account")
-	req.UserId = uuid.NewV4().String()
 	createAccountRes, err := InsertAccount(srv.DB, req)
 	if err != nil {
 		slog.Error("Failed to insert account information", "error", err)

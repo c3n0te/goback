@@ -18,12 +18,13 @@ func InsertAccount(db *sqlx.DB, req *api.CreateAccountRequest) (*api.CreateAccou
 	}
 	defer tx.Rollback()
 
+	userId := uuid.NewV4()
 	_, err = tx.Exec(
 		`INSERT INTO Accounts
 			(userid, username, email, password, balance)
 		VALUES
 			($1, $2, $3, $4, $5)`,
-		req.UserId,
+		userId,
 		req.Username,
 		req.Email,
 		req.Password,
@@ -38,7 +39,7 @@ func InsertAccount(db *sqlx.DB, req *api.CreateAccountRequest) (*api.CreateAccou
 	tx.Commit()
 	slog.Info(fmt.Sprintf("Account inserted: %v", req))
 	createAccountRes := &api.CreateAccountResponse{
-		UserId: req.UserId,
+		UserId: userId.String(),
 	}
 
 	return createAccountRes, nil

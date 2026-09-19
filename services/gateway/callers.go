@@ -33,6 +33,7 @@ func CallQueuePublish(qpublisher *rmq.Publisher, newTxReq *api.TxRequest) (*api.
 				Timestamp: time.Now().UTC().Format(time.RFC3339),
 				Stock:     newTxReq.Stock,
 				Shares:    newTxReq.Shares,
+				TotalCost: newTxReq.Shares * newTxReq.SharePrice,
 			}
 
 			ch <- buyResp
@@ -45,6 +46,7 @@ func CallQueuePublish(qpublisher *rmq.Publisher, newTxReq *api.TxRequest) (*api.
 				Timestamp: time.Now().UTC().Format(time.RFC3339),
 				Stock:     newTxReq.Stock,
 				Shares:    newTxReq.Shares,
+				TotalCost: 0.0,
 			}
 
 			ch <- buyResp
@@ -57,6 +59,7 @@ func CallQueuePublish(qpublisher *rmq.Publisher, newTxReq *api.TxRequest) (*api.
 				Timestamp: time.Now().UTC().Format(time.RFC3339),
 				Stock:     newTxReq.Stock,
 				Shares:    newTxReq.Shares,
+				TotalCost: 0.0,
 			}
 
 			ch <- buyResp
@@ -69,6 +72,7 @@ func CallQueuePublish(qpublisher *rmq.Publisher, newTxReq *api.TxRequest) (*api.
 				Timestamp: time.Now().UTC().Format(time.RFC3339),
 				Stock:     newTxReq.Stock,
 				Shares:    newTxReq.Shares,
+				TotalCost: 0.0,
 			}
 
 			ch <- buyResp
@@ -81,6 +85,7 @@ func CallQueuePublish(qpublisher *rmq.Publisher, newTxReq *api.TxRequest) (*api.
 				Timestamp: time.Now().UTC().Format(time.RFC3339),
 				Stock:     newTxReq.Stock,
 				Shares:    newTxReq.Shares,
+				TotalCost: 0.0,
 			}
 
 			ch <- buyResp
